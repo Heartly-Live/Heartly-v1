@@ -5,12 +5,12 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Heartly
-    network: optimism-sepolia
+    name: heartly
+    network: base-sepolia
     source:
-      address: "0xdFF510b25eD8Dd85F70e851814e5359aF9B49A4b"
-      abi: Heartly
-      startBlock: 21742200
+      address: "0xE0a3d609318b219D91B6DDb52eC1511fc83119B9"
+      abi: heartly
+      startBlock: 19766965
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -27,8 +27,8 @@ dataSources:
         - OwnershipTransferred
         - PlatformBalanceWithdrawn
       abis:
-        - name: Heartly
-          file: ./abis/Heartly.json
+        - name: heartly
+          file: ./abis/heartly.json
       eventHandlers:
         - event: BalanceWithdrawn(indexed address,uint256)
           handler: handleBalanceWithdrawn

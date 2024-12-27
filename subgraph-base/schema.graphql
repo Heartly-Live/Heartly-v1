@@ -1,0 +1,101 @@
+type BalanceWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CallCancelled @entity(immutable: true) {
+  id: Bytes!
+  callId: Bytes! # bytes32
+  canceller: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CallEnded @entity(immutable: true) {
+  id: Bytes!
+  callId: Bytes! # bytes32
+  user: Bytes! # address
+  expert: Bytes! # address
+  duration: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CallScheduled @entity(immutable: true) {
+  id: Bytes!
+  callId: Bytes! # bytes32
+  user: Bytes! # address
+  expert: Bytes! # address
+  callType: Int! # uint8
+  duration: BigInt! # uint256
+  stakedAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CallStarted @entity(immutable: true) {
+  id: Bytes!
+  callId: Bytes! # bytes32
+  user: Bytes! # address
+  expert: Bytes! # address
+  startTime: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Deposited @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ExpertBalanceWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ExpertRegistered @entity(immutable: true) {
+  id: Bytes!
+  expert: Bytes! # address
+  name: String! # string
+  voiceRate: BigInt! # uint256
+  videoRate: BigInt! # uint256
+  expertise: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PlatformBalanceWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
