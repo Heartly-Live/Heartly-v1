@@ -50,7 +50,7 @@ export function handleCallEnded(event: CallEndedEvent): void {
     call.status = "ENDED";
     call.actualDuration = event.params.duration;
     call.amountPaid = event.params.amount;
-    call.save();
+    call.endTime = event.block.timestamp;
 
     let expert = Expert.load(call.expert);
     if (expert != null) {
@@ -68,6 +68,7 @@ export function handleCallEnded(event: CallEndedEvent): void {
       expert.balance = expert.balance.plus(
         event.params.amount.minus(platformFee)
       );
+      call.platformFee = platformFee;
 
       if (event.params.amount < call.stakedAmount) {
         let user = User.load(call.user);
@@ -75,9 +76,10 @@ export function handleCallEnded(event: CallEndedEvent): void {
           user.balance = user.balance.plus(
             call.stakedAmount.minus(event.params.amount)
           );
-          user.save;
+          user.save();
         }
         expert.save();
+        call.save();
       }
     }
   }
