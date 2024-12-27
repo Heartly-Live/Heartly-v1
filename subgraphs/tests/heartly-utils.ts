@@ -193,8 +193,7 @@ export function createExpertRegisteredEvent(
   expert: Address,
   name: string,
   voiceRate: BigInt,
-  videoRate: BigInt,
-  expertise: string
+  videoRate: BigInt
 ): ExpertRegistered {
   let expertRegisteredEvent = changetype<ExpertRegistered>(newMockEvent())
 
@@ -217,9 +216,6 @@ export function createExpertRegisteredEvent(
       "videoRate",
       ethereum.Value.fromUnsignedBigInt(videoRate)
     )
-  )
-  expertRegisteredEvent.parameters.push(
-    new ethereum.EventParam("expertise", ethereum.Value.fromString(expertise))
   )
 
   return expertRegisteredEvent
