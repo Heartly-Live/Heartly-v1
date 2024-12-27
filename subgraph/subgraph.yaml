@@ -1,0 +1,53 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Heartly
+    network: optimism-sepolia
+    source:
+      address: "0x6c50C6fab41b878E45c08d99223Ffb494a6C5328"
+      abi: Heartly
+      startBlock: 21738902
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BalanceWithdrawn
+        - CallCancelled
+        - CallEnded
+        - CallScheduled
+        - CallStarted
+        - Deposited
+        - ExpertBalanceWithdrawn
+        - ExpertRegistered
+        - OwnershipTransferred
+        - PlatformBalanceWithdrawn
+      abis:
+        - name: Heartly
+          file: ./abis/Heartly.json
+      eventHandlers:
+        - event: BalanceWithdrawn(indexed address,uint256)
+          handler: handleBalanceWithdrawn
+        - event: CallCancelled(indexed bytes32,indexed address)
+          handler: handleCallCancelled
+        - event: CallEnded(indexed bytes32,indexed address,indexed address,uint256,uint256)
+          handler: handleCallEnded
+        - event: CallScheduled(indexed bytes32,indexed address,indexed address,uint8,uint256,uint256)
+          handler: handleCallScheduled
+        - event: CallStarted(indexed bytes32,indexed address,indexed address,uint256)
+          handler: handleCallStarted
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+        - event: ExpertBalanceWithdrawn(indexed address,uint256)
+          handler: handleExpertBalanceWithdrawn
+        - event: ExpertRegistered(indexed address,string,uint256,uint256)
+          handler: handleExpertRegistered
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: PlatformBalanceWithdrawn(indexed address,uint256)
+          handler: handlePlatformBalanceWithdrawn
+      file: ./src/heartly.ts
