@@ -8,9 +8,9 @@ dataSources:
     name: Heartly
     network: optimism-sepolia
     source:
-      address: "0x6c50C6fab41b878E45c08d99223Ffb494a6C5328"
+      address: "0xdFF510b25eD8Dd85F70e851814e5359aF9B49A4b"
       abi: Heartly
-      startBlock: 21738902
+      startBlock: 21742200
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -44,7 +44,7 @@ dataSources:
           handler: handleDeposited
         - event: ExpertBalanceWithdrawn(indexed address,uint256)
           handler: handleExpertBalanceWithdrawn
-        - event: ExpertRegistered(indexed address,string,uint256,uint256)
+        - event: ExpertRegistered(indexed address,string,uint256,uint256,string)
           handler: handleExpertRegistered
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
