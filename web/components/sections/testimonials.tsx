@@ -26,7 +26,7 @@ function TestimonialCard({
       <div className="w-12 h-12 bg-red-500 rounded-full mb-4 flex items-center justify-center text-white text-xs">
         wip pic
       </div>
-      <blockquote className="text-sm mb-4">"{quote}"</blockquote>
+      <blockquote className="text-sm mb-4">{`"${quote}"`}</blockquote>
       <div className="text-right">
         <p className="font-medium">{author}</p>
         <p className="text-sm text-muted-foreground flex items-center justify-end gap-1">
@@ -100,7 +100,6 @@ export function Testimonials() {
       if (!scrollContainer) return;
 
       const elapsed = timestamp - start;
-      const delta = timestamp - previousTimestamp;
 
       const progress = (elapsed % duration) / duration;
       const scrollPosition = progress * (scrollWidth - clientWidth);
