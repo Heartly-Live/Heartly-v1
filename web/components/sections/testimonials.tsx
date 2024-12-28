@@ -169,7 +169,7 @@ export function Testimonials() {
       <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
       <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
 
-      <div ref={scrollRef} className="flex overflow-x-hidden">
+      <div ref={scrollRef} className="flex overflow-hidden">
         <div className="flex animate-scroll">
           {testimonials.map((testimonial, index) => (
             <TestimonialCard
