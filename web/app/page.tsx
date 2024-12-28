@@ -1,6 +1,6 @@
-import { Layout } from "@/components/layout"
-import { Navbar } from "@/components/navbar"
-import { Hero } from "@/components/hero"
+import { Layout } from "@/components/layout";
+import { Hero } from "@/components/Home";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
@@ -8,6 +8,5 @@ export default function Home() {
       <Navbar />
       <Hero />
     </Layout>
-  )
+  );
 }
-
