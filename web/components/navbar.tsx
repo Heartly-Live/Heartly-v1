@@ -24,7 +24,7 @@ function NavItem({ href, children, className }: NavItemProps) {
 
 export function Navbar() {
   return (
-    <nav className="fixed p-4 w-full z-50 bg-background backdrop-blur-sm">
+    <nav className="p-4 w-full z-50 bg-background backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between p-5">
         <Link href="/" className="font-semibold text-xl tracking-tight">
           <div className="flex items-center gap-2">

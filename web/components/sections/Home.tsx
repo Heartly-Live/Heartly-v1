@@ -1,0 +1,69 @@
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import Image from "next/image";
+import Logo from "@/assets/Logo.png";
+
+interface NavItemProps {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+function NavItem({ href, children, className }: NavItemProps) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "text-sm font-semibold text-muted-foreground transition-colors hover:text-primary font-nunito",
+        className
+      )}
+    >
+      {children}
+    </Link>
+  );
+}
+
+export function Hero() {
+  return (
+    <div className="flex-col items-center justify-center  py-16 mt-16">
+      <nav className="p-4 w-full z-50 bg-background backdrop-blur-sm fixed top-0 left-0 right-0">
+        <div className="container flex h-16 items-center justify-between p-5">
+          <Link href="/" className="font-semibold text-xl tracking-tight">
+            <div className="flex items-center gap-2">
+              <Image src={Logo} alt="Logo" className="w-16 h-16" />
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-3xl font-nunito">HEARTLY</div>
+                <div className="text-xs font-thin">Talk.Heal.Grow</div>
+              </div>
+            </div>
+          </Link>
+          <div className="flex justify-evenly gap-20">
+            <NavItem href="/what">What</NavItem>
+            <NavItem href="/why">Why</NavItem>
+            <NavItem href="/how">How</NavItem>
+          </div>
+          <div>
+            <NavItem href="/knowmore">Know More!</NavItem>
+          </div>
+        </div>
+      </nav>
+      <section className="flex flex-col items-center justify-center text-center px-4 font-montserrat py-20 mx-auto">
+        <h1 className="text-6xl md:text-7xl font-medium tracking-tight mb-4 ">
+          <span>Talk.</span>{" "}
+          <span className="bg-tertiary p-2 rounded">Heal.</span>{" "}
+          <span>Grow.</span>
+        </h1>
+        <p className="text-lg mb-8 font-normal">
+          Talk about anything & everything, anonymously.
+        </p>
+        <Button
+          size="lg"
+          className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
+        >
+          Start Your Journey
+        </Button>
+      </section>
+    </div>
+  );
+}
