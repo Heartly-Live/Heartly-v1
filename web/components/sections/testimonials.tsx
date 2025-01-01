@@ -5,43 +5,6 @@ import TestimonialImage from "@/assets/Testimonial.png";
 import Image from "next/image";
 import { AnimatedTestimonials } from "../ui/animated-testimonials";
 
-interface TestimonialCardProps {
-  quote: string;
-  author: string;
-  location: string;
-  isFocused: boolean;
-}
-
-function TestimonialCard({
-  quote,
-  author,
-  location,
-  isFocused,
-}: TestimonialCardProps & { isFocused: boolean }) {
-  return (
-    <div
-      className={`flex-shrink-0 w-[500px] bg-white rounded-lg shadow-lg p-6 mx-2 transition-transform duration-300 border-4 ${
-        isFocused ? "scale-100" : "scale-50 border-transparent"
-      }`}
-    >
-      <Image
-        src={TestimonialImage}
-        alt="TestimonialImage"
-        className="w-12 h-12 rounded-full mb-4 flex items-center justify-center text-white text-xs"
-      />
-
-      <blockquote className="text-sm mb-4">{`"${quote}"`}</blockquote>
-      <div className="text-right">
-        <p className="font-medium">{author}</p>
-        <p className="text-sm text-muted-foreground flex items-center justify-end gap-1">
-          {location}
-          <span className="text-xs">🇺🇸</span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 const testimonials = [
   {
     quote:
