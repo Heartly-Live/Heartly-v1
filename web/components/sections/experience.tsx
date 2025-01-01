@@ -5,8 +5,8 @@ interface ExperienceCardProps {
 
 import Image from "next/image";
 import ExperienceImage from "@/assets/Experience1.png";
-import ExperienceImage2 from "@/assets/Experience2.png";
-import ExperienceImage3 from "@/assets/Experience3.png";
+// import ExperienceImage2 from "@/assets/Experience2.png";
+// import ExperienceImage3 from "@/assets/Experience3.png";
 
 function ExperienceCard({ title, description }: ExperienceCardProps) {
   return (

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/assets/Logo.png";
-import Doodle1 from "@/assets/Doodle1.png"; // Add your doodle images here
+// import Doodle1 from "@/assets/Doodle1.png"; // Add your doodle images here
 import Doodle2 from "@/assets/GrowDoodle.png";
 
 interface NavItemProps {
