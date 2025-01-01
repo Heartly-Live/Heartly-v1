@@ -29,16 +29,10 @@ function NavItem({ href, children, className }: NavItemProps) {
 export function Hero() {
   return (
     <div className="relative flex-col items-center justify-center py-16 mt-16">
-      {/* Background Doodles */}
-      <Image
-        src={Doodle1}
-        alt="Doodle 1"
-        className="absolute top-10 left-10 z-0 opacity-70 "
-      />
       <Image
         src={Doodle2}
         alt="Doodle 2"
-        className="absolute bottom-10 right-10 z-0 opacity-70"
+        className="absolute bottom-10 right-20 z-0 opacity-70"
       />
 
       {/* Navbar */}

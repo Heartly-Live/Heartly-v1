@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Logo from "@/assets/Logo.png";
 import TestimonialImage from "@/assets/Testimonial.png";
 import Image from "next/image";
+import { AnimatedTestimonials } from "../ui/animated-testimonials";
 
 interface TestimonialCardProps {
   quote: string;
@@ -20,7 +20,7 @@ function TestimonialCard({
 }: TestimonialCardProps & { isFocused: boolean }) {
   return (
     <div
-      className={`flex-shrink-0 w-[300px] bg-white rounded-lg shadow-lg p-6 mx-2 transition-transform duration-300 border-4 ${
+      className={`flex-shrink-0 w-[500px] bg-white rounded-lg shadow-lg p-6 mx-2 transition-transform duration-300 border-4 ${
         isFocused ? "scale-100" : "scale-50 border-transparent"
       }`}
     >
@@ -45,128 +45,45 @@ function TestimonialCard({
 const testimonials = [
   {
     quote:
-      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
-    author: "Sophia A.",
-    location: "New Jersey, USA",
+      "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
+    name: "Sarah Chen",
+    designation: "Product Manager at TechFlow",
+    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote:
-      "The personalized approach to mindfulness has transformed my daily routine.",
-    author: "Michael R.",
-    location: "California, USA",
+      "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
+    name: "Michael Rodriguez",
+    designation: "CTO at InnovateSphere",
+    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote:
-      "I love how I can focus on my journey without worrying about data privacy.",
-    author: "Emma L.",
-    location: "Texas, USA",
+      "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
+    name: "Emily Watson",
+    designation: "Operations Director at CloudScale",
+    src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote:
-      "The Web3 integration makes me feel secure about my personal information.",
-    author: "David K.",
-    location: "Florida, USA",
-  },
-  // Duplicate testimonials for continuous scroll
-  {
-    quote:
-      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
-    author: "Sophia A.",
-    location: "New Jersey, USA",
+      "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
+    name: "James Kim",
+    designation: "Engineering Lead at DataPro",
+    src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     quote:
-      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
-    author: "Sophia A.",
-    location: "New Jersey, USA",
-  },
-  {
-    quote:
-      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
-    author: "Sophia A.",
-    location: "New Jersey, USA",
-  },
-  {
-    quote:
-      "The personalized approach to mindfulness has transformed my daily routine.",
-    author: "Michael R.",
-    location: "California, USA",
+      "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
+    name: "Lisa Thompson",
+    designation: "VP of Technology at FutureNet",
+    src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
 
 export function Testimonials() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-
-    const scrollWidth = scrollContainer.scrollWidth;
-    const clientWidth = scrollContainer.clientWidth;
-    const duration = 20000; // 30 seconds for one complete scroll
-
-    let start: number | null = null;
-    let previousTimestamp: number | null = null;
-
-    function step(timestamp: number) {
-      if (!start) start = timestamp;
-      if (!previousTimestamp) previousTimestamp = timestamp;
-
-      if (!scrollContainer) return;
-
-      const elapsed = timestamp - start;
-
-      const progress = (elapsed % duration) / duration;
-      const scrollPosition = progress * (scrollWidth - clientWidth);
-
-      scrollContainer.scrollLeft = scrollPosition;
-
-      // Calculate the focused index
-      const centerPosition = scrollPosition + clientWidth / 2;
-      const cardWidth = 300 + 32; // card width + margin
-      const newFocusedIndex = Math.floor(centerPosition / cardWidth);
-
-      setFocusedIndex(newFocusedIndex);
-
-      previousTimestamp = timestamp;
-      requestAnimationFrame(step);
-    }
-
-    const animationFrame = requestAnimationFrame(step);
-
-    return () => cancelAnimationFrame(animationFrame);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollContainer = scrollRef.current;
-      if (!scrollContainer) return;
-
-      const scrollLeft = scrollContainer.scrollLeft;
-      const clientWidth = scrollContainer.clientWidth;
-      const centerPosition = scrollLeft + clientWidth / 2;
-      const cardWidth = 300 + 32; // card width + margin
-      const newFocusedIndex = Math.floor(centerPosition / cardWidth);
-
-      setFocusedIndex(newFocusedIndex);
-    };
-
-    const scrollContainer = scrollRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
   return (
-    <section className="py-24 relative overflow-hidden mx-auto">
-      <div className="container mb-12">
+    <section className="py-24 overflow-hidden ">
+      <div className="container mb-12 mx-auto">
         <h2 className="text-4xl md:text-5xl font-medium text-center flex items-center justify-center gap-2">
           50+ users trust
           <span className="inline-flex items-center">
@@ -181,24 +98,8 @@ export function Testimonials() {
           </span>
         </h2>
       </div>
-
-      {/* <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
-      <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" /> */}
-
-      <div className="bg-gradient-to-b from-[#FEBF5D80] to-[#FFA2C980] border-spacing-8 rounded-[300px] px-[60px] h-72 flex justify-center items-center mx-32">
-        <div ref={scrollRef} className="flex overflow-hidden ">
-          <div className="flex animate-scroll">
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={index}
-                quote={testimonial.quote}
-                author={testimonial.author}
-                location={testimonial.location}
-                isFocused={index === focusedIndex}
-              />
-            ))}
-          </div>
-        </div>
+      <div>
+        <AnimatedTestimonials testimonials={testimonials} autoplay={true} />
       </div>
     </section>
   );
