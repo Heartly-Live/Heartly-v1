@@ -20,7 +20,7 @@ function TestimonialCard({
   return (
     <div
       className={`flex-shrink-0 w-[300px] bg-white rounded-lg shadow-lg p-6 mx-4 transition-transform duration-300 border-4 ${
-        isFocused ? "scale-125 border-tertiary" : "scale-50 border-transparent"
+        isFocused ? "scale-100" : "scale-50 border-transparent"
       }`}
     >
       <div className="w-12 h-12 bg-red-500 rounded-full mb-4 flex items-center justify-center text-white text-xs">
@@ -72,6 +72,18 @@ const testimonials = [
   },
   {
     quote:
+      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
+    author: "Sophia A.",
+    location: "New Jersey, USA",
+  },
+  {
+    quote:
+      "Heartly gives me peace of mind, knowing my self-care journey is 100% private and tailored just for me.",
+    author: "Sophia A.",
+    location: "New Jersey, USA",
+  },
+  {
+    quote:
       "The personalized approach to mindfulness has transformed my daily routine.",
     author: "Michael R.",
     location: "California, USA",
@@ -88,7 +100,7 @@ export function Testimonials() {
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;
-    const duration = 30000; // 30 seconds for one complete scroll
+    const duration = 10000; // 30 seconds for one complete scroll
 
     let start: number | null = null;
     let previousTimestamp: number | null = null;
@@ -166,20 +178,22 @@ export function Testimonials() {
         </h2>
       </div>
 
-      <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
-      <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" />
+      {/* <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-background to-transparent z-10" />
+      <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-background to-transparent z-10" /> */}
 
-      <div ref={scrollRef} className="flex overflow-hidden">
-        <div className="flex animate-scroll">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              location={testimonial.location}
-              isFocused={index === focusedIndex}
-            />
-          ))}
+      <div className="bg-gradient-to-b from-[#FEBF5D80] to-[#FFA2C980] border-spacing-8 rounded-[300px] px-[60px] h-72 flex justify-center items-center mx-32">
+        <div ref={scrollRef} className="flex overflow-hidden ">
+          <div className="flex animate-scroll">
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard
+                key={index}
+                quote={testimonial.quote}
+                author={testimonial.author}
+                location={testimonial.location}
+                isFocused={index === focusedIndex}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

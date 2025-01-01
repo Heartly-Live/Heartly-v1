@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/assets/Logo.png";
+import Doodle1 from "@/assets/Doodle1.png"; // Add your doodle images here
+import Doodle2 from "@/assets/GrowDoodle.png";
 
 interface NavItemProps {
   href: string;
@@ -26,7 +28,20 @@ function NavItem({ href, children, className }: NavItemProps) {
 
 export function Hero() {
   return (
-    <div className="flex-col items-center justify-center  py-16 mt-16">
+    <div className="relative flex-col items-center justify-center py-16 mt-16">
+      {/* Background Doodles */}
+      <Image
+        src={Doodle1}
+        alt="Doodle 1"
+        className="absolute top-10 left-10 z-0 opacity-70 "
+      />
+      <Image
+        src={Doodle2}
+        alt="Doodle 2"
+        className="absolute bottom-10 right-10 z-0 opacity-70"
+      />
+
+      {/* Navbar */}
       <nav className="p-4 w-full z-50 bg-background backdrop-blur-sm fixed top-0 left-0 right-0">
         <div className="container flex h-16 items-center justify-between p-5">
           <Link href="/" className="font-semibold text-xl tracking-tight">
@@ -48,7 +63,9 @@ export function Hero() {
           </div>
         </div>
       </nav>
-      <section className="flex flex-col items-center justify-center text-center px-4 font-montserrat py-20 mx-auto">
+
+      {/* Hero Section */}
+      <section className="flex flex-col items-center justify-center text-center px-4 font-montserrat py-20 mx-auto relative z-10">
         <h1 className="text-6xl md:text-7xl font-medium tracking-tight mb-4 ">
           <span>Talk.</span>{" "}
           <span className="bg-tertiary p-2 rounded">Heal.</span>{" "}
