@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Logo from "@/assets/Logo.png";
+import TestimonialImage from "@/assets/Testimonial.png";
 import Image from "next/image";
 
 interface TestimonialCardProps {
@@ -19,13 +20,16 @@ function TestimonialCard({
 }: TestimonialCardProps & { isFocused: boolean }) {
   return (
     <div
-      className={`flex-shrink-0 w-[300px] bg-white rounded-lg shadow-lg p-6 mx-4 transition-transform duration-300 border-4 ${
+      className={`flex-shrink-0 w-[300px] bg-white rounded-lg shadow-lg p-6 mx-2 transition-transform duration-300 border-4 ${
         isFocused ? "scale-100" : "scale-50 border-transparent"
       }`}
     >
-      <div className="w-12 h-12 bg-red-500 rounded-full mb-4 flex items-center justify-center text-white text-xs">
-        wip pic
-      </div>
+      <Image
+        src={TestimonialImage}
+        alt="TestimonialImage"
+        className="w-12 h-12 rounded-full mb-4 flex items-center justify-center text-white text-xs"
+      />
+
       <blockquote className="text-sm mb-4">{`"${quote}"`}</blockquote>
       <div className="text-right">
         <p className="font-medium">{author}</p>
@@ -100,7 +104,7 @@ export function Testimonials() {
 
     const scrollWidth = scrollContainer.scrollWidth;
     const clientWidth = scrollContainer.clientWidth;
-    const duration = 10000; // 30 seconds for one complete scroll
+    const duration = 20000; // 30 seconds for one complete scroll
 
     let start: number | null = null;
     let previousTimestamp: number | null = null;
