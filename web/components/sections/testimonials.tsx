@@ -1,7 +1,6 @@
 "use client";
 
 import Logo from "@/assets/Logo.png";
-import TestimonialImage from "@/assets/Testimonial.png";
 import Image from "next/image";
 import { AnimatedTestimonials } from "../ui/animated-testimonials";
 
