@@ -9,7 +9,7 @@ import BottomNavbar from "@/components/sections/BottomNavbar";
 import { Button } from "@/components/ui/button";
 import ListenerCard from "@/components/sections/listener-card";
 
-const page = () => {
+const Page = () => {
   const { address } = useAccount();
   const listeners = Array(8).fill({
     name: "Patient Listener",
@@ -40,7 +40,7 @@ const page = () => {
                 <Image src={Logo} alt="Logo" className="w-12 h-12" />
                 <div className="flex flex-col items-start">
                   <div className="text-2xl font-nunito font-bold">
-                    Let's Talk
+                    {`Let's Talk`}
                   </div>
                   <div className="text-xs font-thin flex justify-center items-center gap-2">
                     <div>243 listeners online</div>
@@ -80,4 +80,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
