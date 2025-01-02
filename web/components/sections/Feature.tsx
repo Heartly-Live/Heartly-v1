@@ -49,12 +49,12 @@ export function Features() {
           <FeatureCard
             featureImage={FeatureImage2}
             title="Personalized Guidance"
-            description="Your journey is yours alone. Heartly ensures complete privacy through decentralized Web3 technology, storing no user data."
+            description="Experience mindfulness tailored to your unique needs, without interference or distractions."
           />
           <FeatureCard
             featureImage={FeatureImage3}
             title="Web3-Powered Freedom"
-            description="Your journey is yours alone. Heartly ensures complete privacy through decentralized Web3 technology, storing no user data."
+            description="Enjoy a seamless experience with no sign-ups or personal data sharing—just pure focus on self-care."
           />
         </div>
       </div>
