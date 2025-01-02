@@ -32,7 +32,7 @@ export function Hero() {
       <Image
         src={Doodle2}
         alt="Doodle 2"
-        className="absolute bottom-10 right-20 z-0 opacity-70"
+        className="hidden md:block absolute bottom-16 right-28 z-0 opacity-70"
       />
 
       {/* Navbar */}
@@ -47,23 +47,21 @@ export function Hero() {
               </div>
             </div>
           </Link>
-          <div className="flex justify-evenly gap-20">
-            <NavItem href="/what">What</NavItem>
-            <NavItem href="/why">Why</NavItem>
-            <NavItem href="/how">How</NavItem>
+          <div className="hidden md:flex justify-evenly gap-20">
+            <NavItem href="#what">What</NavItem>
+            <NavItem href="#why">Why</NavItem>
+            <NavItem href="#testimonials">Testimonials</NavItem>
           </div>
-          <div>
-            <NavItem href="/knowmore">Know More!</NavItem>
-          </div>
+          <div></div>
         </div>
       </nav>
 
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center px-4 font-montserrat py-20 mx-auto relative z-10">
-        <h1 className="text-6xl md:text-7xl font-medium tracking-tight mb-4 ">
-          <span>Talk.</span>{" "}
-          <span className="bg-tertiary p-2 rounded">Heal.</span>{" "}
-          <span>Grow.</span>
+        <h1 className="text-6xl md:text-7xl font-medium tracking-tight mb-4 flex flex-col md:flex-row justify-center items-center gap-3">
+          <div>Talk.</div>
+          <div className="bg-tertiary p-2 rounded">Heal.</div>
+          <div>Grow.</div>
         </h1>
         <p className="text-lg mb-8 font-normal">
           Talk about anything & everything, anonymously.

@@ -44,11 +44,11 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section className="py-24 overflow-hidden ">
+    <section id="testimonials" className="py-24 overflow-hidden ">
       <div className="container mb-12 mx-auto">
-        <h2 className="text-4xl md:text-5xl font-medium text-center flex items-center justify-center gap-2">
-          50+ users trust
-          <span className="inline-flex items-center">
+        <h2 className="text-4xl md:text-5xl font-medium text-center flex-col items-center justify-center gap-2 md:flex">
+          <div>50+ users trust</div>
+          <div className="inline-flex items-center">
             <Image
               src={Logo}
               alt="Logo"
@@ -57,7 +57,7 @@ export function Testimonials() {
               height={100}
             />
             HEARTLY
-          </span>
+          </div>
         </h2>
       </div>
       <div>
