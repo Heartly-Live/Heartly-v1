@@ -66,12 +66,14 @@ export function Hero() {
         <p className="text-lg mb-8 font-normal">
           Talk about anything & everything, anonymously.
         </p>
-        <Button
-          size="lg"
-          className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
-        >
-          Start Your Journey
-        </Button>
+        <Link href="/app">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
+          >
+            Start Your Journey
+          </Button>
+        </Link>
       </section>
     </div>
   );
