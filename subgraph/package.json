@@ -1,13 +1,13 @@
 {
-  "name": "heartly-op",
+  "name": "heartly-base-sepolia",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ heartly-op",
-    "create-local": "graph create --node http://localhost:8020/ heartly-op",
-    "remove-local": "graph remove --node http://localhost:8020/ heartly-op",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 heartly-op",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ heartly-base-sepolia",
+    "create-local": "graph create --node http://localhost:8020/ heartly-base-sepolia",
+    "remove-local": "graph remove --node http://localhost:8020/ heartly-base-sepolia",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 heartly-base-sepolia",
     "test": "graph test"
   },
   "dependencies": {

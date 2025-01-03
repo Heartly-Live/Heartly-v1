@@ -7,10 +7,9 @@ import {
   CallScheduled,
   CallStarted,
   Deposited,
-  ExpertBalanceWithdrawn,
   ExpertRegistered,
   OwnershipTransferred,
-  PlatformBalanceWithdrawn
+  updatedExpertrates
 } from "../generated/Heartly/Heartly"
 
 export function createBalanceWithdrawnEvent(
@@ -31,19 +30,13 @@ export function createBalanceWithdrawnEvent(
   return balanceWithdrawnEvent
 }
 
-export function createCallCancelledEvent(
-  callId: Bytes,
-  canceller: Address
-): CallCancelled {
+export function createCallCancelledEvent(callId: Bytes): CallCancelled {
   let callCancelledEvent = changetype<CallCancelled>(newMockEvent())
 
   callCancelledEvent.parameters = new Array()
 
   callCancelledEvent.parameters.push(
     new ethereum.EventParam("callId", ethereum.Value.fromFixedBytes(callId))
-  )
-  callCancelledEvent.parameters.push(
-    new ethereum.EventParam("canceller", ethereum.Value.fromAddress(canceller))
   )
 
   return callCancelledEvent
@@ -54,7 +47,8 @@ export function createCallEndedEvent(
   user: Address,
   expert: Address,
   duration: BigInt,
-  amount: BigInt
+  amount: BigInt,
+  rating: BigInt
 ): CallEnded {
   let callEndedEvent = changetype<CallEnded>(newMockEvent())
 
@@ -77,6 +71,9 @@ export function createCallEndedEvent(
   )
   callEndedEvent.parameters.push(
     new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  )
+  callEndedEvent.parameters.push(
+    new ethereum.EventParam("rating", ethereum.Value.fromUnsignedBigInt(rating))
   )
 
   return callEndedEvent
@@ -169,32 +166,12 @@ export function createDepositedEvent(user: Address, amount: BigInt): Deposited {
   return depositedEvent
 }
 
-export function createExpertBalanceWithdrawnEvent(
-  user: Address,
-  amount: BigInt
-): ExpertBalanceWithdrawn {
-  let expertBalanceWithdrawnEvent = changetype<ExpertBalanceWithdrawn>(
-    newMockEvent()
-  )
-
-  expertBalanceWithdrawnEvent.parameters = new Array()
-
-  expertBalanceWithdrawnEvent.parameters.push(
-    new ethereum.EventParam("user", ethereum.Value.fromAddress(user))
-  )
-  expertBalanceWithdrawnEvent.parameters.push(
-    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
-  )
-
-  return expertBalanceWithdrawnEvent
-}
-
 export function createExpertRegisteredEvent(
   expert: Address,
   name: string,
   voiceRate: BigInt,
   videoRate: BigInt,
-  expertise: string
+  cid: string
 ): ExpertRegistered {
   let expertRegisteredEvent = changetype<ExpertRegistered>(newMockEvent())
 
@@ -219,7 +196,7 @@ export function createExpertRegisteredEvent(
     )
   )
   expertRegisteredEvent.parameters.push(
-    new ethereum.EventParam("expertise", ethereum.Value.fromString(expertise))
+    new ethereum.EventParam("cid", ethereum.Value.fromString(cid))
   )
 
   return expertRegisteredEvent
@@ -248,22 +225,27 @@ export function createOwnershipTransferredEvent(
   return ownershipTransferredEvent
 }
 
-export function createPlatformBalanceWithdrawnEvent(
+export function createupdatedExpertratesEvent(
   user: Address,
-  amount: BigInt
-): PlatformBalanceWithdrawn {
-  let platformBalanceWithdrawnEvent = changetype<PlatformBalanceWithdrawn>(
-    newMockEvent()
-  )
+  isVoice: boolean,
+  updatedRate: BigInt
+): updatedExpertrates {
+  let updatedExpertratesEvent = changetype<updatedExpertrates>(newMockEvent())
 
-  platformBalanceWithdrawnEvent.parameters = new Array()
+  updatedExpertratesEvent.parameters = new Array()
 
-  platformBalanceWithdrawnEvent.parameters.push(
+  updatedExpertratesEvent.parameters.push(
     new ethereum.EventParam("user", ethereum.Value.fromAddress(user))
   )
-  platformBalanceWithdrawnEvent.parameters.push(
-    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  updatedExpertratesEvent.parameters.push(
+    new ethereum.EventParam("isVoice", ethereum.Value.fromBoolean(isVoice))
+  )
+  updatedExpertratesEvent.parameters.push(
+    new ethereum.EventParam(
+      "updatedRate",
+      ethereum.Value.fromUnsignedBigInt(updatedRate)
+    )
   )
 
-  return platformBalanceWithdrawnEvent
+  return updatedExpertratesEvent
 }

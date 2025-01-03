@@ -1,8 +1,8 @@
 {
-  "optimism-sepolia": {
+  "base-sepolia": {
     "Heartly": {
-      "address": "0xdFF510b25eD8Dd85F70e851814e5359aF9B49A4b",
-      "startBlock": 21742200
+      "address": "0x4Bac3740e3980731f041983B61C075a2D316e78A",
+      "startBlock": 20063454
     }
   }
 }

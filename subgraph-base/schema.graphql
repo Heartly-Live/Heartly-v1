@@ -9,6 +9,7 @@ type User @entity {
 type Expert @entity {
   id: ID! # Wallet address of the expert
   name: String! # Expert's name
+  cid: String # IPFS CID
   expertise: String! # Field of expertise
   balance: BigInt! # Expert's current balance in USDC
   withdrawals: [Withdrawal!]! @derivedFrom(field: "expert")
@@ -32,6 +33,7 @@ type Call @entity {
   endTime: BigInt # Timestamp when the call ended
   scheduledAt: BigInt! # Timestamp when the call was scheduled
   platformFee: BigInt # Fee taken by the platform
+  rating: BigInt
 }
 
 type Deposit @entity {
