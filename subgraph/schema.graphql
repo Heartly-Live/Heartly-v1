@@ -61,6 +61,15 @@ type Deposited @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type ExpertBalanceWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type ExpertRegistered @entity(immutable: true) {
   id: Bytes!
   expert: Bytes! # address
@@ -68,6 +77,7 @@ type ExpertRegistered @entity(immutable: true) {
   voiceRate: BigInt! # uint256
   videoRate: BigInt! # uint256
   cid: String! # string
+  expertise: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -77,6 +87,15 @@ type OwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PlatformBalanceWithdrawn @entity(immutable: true) {
+  id: Bytes!
+  user: Bytes! # address
+  amount: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

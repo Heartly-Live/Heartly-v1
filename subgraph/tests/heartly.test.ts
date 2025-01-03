@@ -8,7 +8,7 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { BalanceWithdrawn } from "../generated/schema"
-import { BalanceWithdrawn as BalanceWithdrawnEvent } from "../generated/Heartly/Heartly"
+import { BalanceWithdrawn as BalanceWithdrawnEvent } from "../generated/heartly/heartly"
 import { handleBalanceWithdrawn } from "../src/heartly"
 import { createBalanceWithdrawnEvent } from "./heartly-utils"
 

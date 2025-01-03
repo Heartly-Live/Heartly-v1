@@ -5,10 +5,12 @@ import {
   CallScheduled as CallScheduledEvent,
   CallStarted as CallStartedEvent,
   Deposited as DepositedEvent,
+  ExpertBalanceWithdrawn as ExpertBalanceWithdrawnEvent,
   ExpertRegistered as ExpertRegisteredEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
+  PlatformBalanceWithdrawn as PlatformBalanceWithdrawnEvent,
   updatedExpertrates as updatedExpertratesEvent
-} from "../generated/Heartly/Heartly"
+} from "../generated/heartly/heartly"
 import {
   BalanceWithdrawn,
   CallCancelled,
@@ -16,8 +18,10 @@ import {
   CallScheduled,
   CallStarted,
   Deposited,
+  ExpertBalanceWithdrawn,
   ExpertRegistered,
   OwnershipTransferred,
+  PlatformBalanceWithdrawn,
   updatedExpertrates
 } from "../generated/schema"
 
@@ -114,6 +118,22 @@ export function handleDeposited(event: DepositedEvent): void {
   entity.save()
 }
 
+export function handleExpertBalanceWithdrawn(
+  event: ExpertBalanceWithdrawnEvent
+): void {
+  let entity = new ExpertBalanceWithdrawn(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.user = event.params.user
+  entity.amount = event.params.amount
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
 export function handleExpertRegistered(event: ExpertRegisteredEvent): void {
   let entity = new ExpertRegistered(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -123,6 +143,7 @@ export function handleExpertRegistered(event: ExpertRegisteredEvent): void {
   entity.voiceRate = event.params.voiceRate
   entity.videoRate = event.params.videoRate
   entity.cid = event.params.cid
+  entity.expertise = event.params.expertise
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -139,6 +160,22 @@ export function handleOwnershipTransferred(
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handlePlatformBalanceWithdrawn(
+  event: PlatformBalanceWithdrawnEvent
+): void {
+  let entity = new PlatformBalanceWithdrawn(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.user = event.params.user
+  entity.amount = event.params.amount
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

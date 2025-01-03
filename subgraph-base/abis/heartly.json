@@ -206,6 +206,25 @@
 			{
 				"indexed": true,
 				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "ExpertBalanceWithdrawn",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
 				"name": "expert",
 				"type": "address"
 			},
@@ -232,6 +251,12 @@
 				"internalType": "string",
 				"name": "cid",
 				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "expertise",
+				"type": "string"
 			}
 		],
 		"name": "ExpertRegistered",
@@ -254,6 +279,25 @@
 			}
 		],
 		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "PlatformBalanceWithdrawn",
 		"type": "event"
 	},
 	{

@@ -1,8 +1,8 @@
 {
   "base-sepolia": {
-    "Heartly": {
-      "address": "0x4Bac3740e3980731f041983B61C075a2D316e78A",
-      "startBlock": 20063454
+    "heartly": {
+      "address": "0x4Cbb5045BC463ac91D2dDD24AF4639F1D98f32Ef",
+      "startBlock": 20063662
     }
   }
 }

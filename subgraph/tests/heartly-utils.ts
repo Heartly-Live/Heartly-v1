@@ -7,10 +7,12 @@ import {
   CallScheduled,
   CallStarted,
   Deposited,
+  ExpertBalanceWithdrawn,
   ExpertRegistered,
   OwnershipTransferred,
+  PlatformBalanceWithdrawn,
   updatedExpertrates
-} from "../generated/Heartly/Heartly"
+} from "../generated/heartly/heartly"
 
 export function createBalanceWithdrawnEvent(
   user: Address,
@@ -166,12 +168,33 @@ export function createDepositedEvent(user: Address, amount: BigInt): Deposited {
   return depositedEvent
 }
 
+export function createExpertBalanceWithdrawnEvent(
+  user: Address,
+  amount: BigInt
+): ExpertBalanceWithdrawn {
+  let expertBalanceWithdrawnEvent = changetype<ExpertBalanceWithdrawn>(
+    newMockEvent()
+  )
+
+  expertBalanceWithdrawnEvent.parameters = new Array()
+
+  expertBalanceWithdrawnEvent.parameters.push(
+    new ethereum.EventParam("user", ethereum.Value.fromAddress(user))
+  )
+  expertBalanceWithdrawnEvent.parameters.push(
+    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  )
+
+  return expertBalanceWithdrawnEvent
+}
+
 export function createExpertRegisteredEvent(
   expert: Address,
   name: string,
   voiceRate: BigInt,
   videoRate: BigInt,
-  cid: string
+  cid: string,
+  expertise: string
 ): ExpertRegistered {
   let expertRegisteredEvent = changetype<ExpertRegistered>(newMockEvent())
 
@@ -198,6 +221,9 @@ export function createExpertRegisteredEvent(
   expertRegisteredEvent.parameters.push(
     new ethereum.EventParam("cid", ethereum.Value.fromString(cid))
   )
+  expertRegisteredEvent.parameters.push(
+    new ethereum.EventParam("expertise", ethereum.Value.fromString(expertise))
+  )
 
   return expertRegisteredEvent
 }
@@ -223,6 +249,26 @@ export function createOwnershipTransferredEvent(
   )
 
   return ownershipTransferredEvent
+}
+
+export function createPlatformBalanceWithdrawnEvent(
+  user: Address,
+  amount: BigInt
+): PlatformBalanceWithdrawn {
+  let platformBalanceWithdrawnEvent = changetype<PlatformBalanceWithdrawn>(
+    newMockEvent()
+  )
+
+  platformBalanceWithdrawnEvent.parameters = new Array()
+
+  platformBalanceWithdrawnEvent.parameters.push(
+    new ethereum.EventParam("user", ethereum.Value.fromAddress(user))
+  )
+  platformBalanceWithdrawnEvent.parameters.push(
+    new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
+  )
+
+  return platformBalanceWithdrawnEvent
 }
 
 export function createupdatedExpertratesEvent(
