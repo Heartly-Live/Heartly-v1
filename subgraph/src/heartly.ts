@@ -1,3 +1,4 @@
+import { BigInt, log } from "@graphprotocol/graph-ts";
 import {
   BalanceWithdrawn as BalanceWithdrawnEvent,
   CallCancelled as CallCancelledEvent,
@@ -9,192 +10,200 @@ import {
   ExpertRegistered as ExpertRegisteredEvent,
   OwnershipTransferred as OwnershipTransferredEvent,
   PlatformBalanceWithdrawn as PlatformBalanceWithdrawnEvent,
-  updatedExpertrates as updatedExpertratesEvent
-} from "../generated/heartly/heartly"
+  updatedExpertrates as updatedExpertratesEvent,
+} from "../generated/heartly/heartly";
 import {
-  BalanceWithdrawn,
-  CallCancelled,
-  CallEnded,
-  CallScheduled,
-  CallStarted,
-  Deposited,
-  ExpertBalanceWithdrawn,
-  ExpertRegistered,
-  OwnershipTransferred,
-  PlatformBalanceWithdrawn,
-  updatedExpertrates
-} from "../generated/schema"
+  Call,
+  User,
+  Expert,
+  Deposit,
+  Withdrawal,
+  Platform,
+} from "../generated/schema";
 
 export function handleBalanceWithdrawn(event: BalanceWithdrawnEvent): void {
-  let entity = new BalanceWithdrawn(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.user = event.params.user
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Balance Withdrawn: {}", [event.params.amount.toString()]);
+  let user = User.load(event.params.user.toHexString());
+  if (user != null) {
+    let withdrawal = new Withdrawal(event.transaction.hash.toHexString());
+    withdrawal.amount = event.params.amount;
+    withdrawal.timestamp = event.block.timestamp;
+    withdrawal.user = user.id;
+    withdrawal.save();
+    user.balance = user.balance.minus(event.params.amount);
+    user.save();
+  }
 }
 
 export function handleCallCancelled(event: CallCancelledEvent): void {
-  let entity = new CallCancelled(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.callId = event.params.callId
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Call Cancelled: {}", [event.params.callId.toHexString()]);
+  let call = Call.load(event.params.callId.toHexString());
+  if (call != null) {
+    call.status = "CANCELLED";
+    call.save();
+  }
 }
 
 export function handleCallEnded(event: CallEndedEvent): void {
-  let entity = new CallEnded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.callId = event.params.callId
-  entity.user = event.params.user
-  entity.expert = event.params.expert
-  entity.duration = event.params.duration
-  entity.amount = event.params.amount
-  entity.rating = event.params.rating
+  log.info("Call Ended: {}", [event.params.callId.toHexString()]);
+  let call = Call.load(event.params.callId.toHexString());
+  if (call != null) {
+    call.status = "ENDED";
+    call.actualDuration = event.params.duration;
+    call.amountPaid = event.params.amount;
+    call.endTime = event.block.timestamp;
+    call.rating = event.params.rating;
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+    let expert = Expert.load(call.expert);
+    if (expert != null) {
+      let platform = Platform.load("1");
+      if (platform == null) {
+        platform = new Platform("1");
+        platform.totalFeesCollected = BigInt.fromI32(0);
+        platform.save();
+      }
+      const platformFee = BigInt.fromI32(20)
+        .times(event.params.amount)
+        .div(BigInt.fromI32(100));
+      platform.totalFeesCollected =
+        platform.totalFeesCollected.plus(platformFee);
+      expert.balance = expert.balance.plus(
+        event.params.amount.minus(platformFee)
+      );
+      call.platformFee = platformFee;
+      if (event.params.rating > BigInt.fromI32(0)) {
+        if (expert.rating == null) {
+          expert.rating = BigInt.fromI32(0);
+        }
+        expert.rating = expert.rating
+          .plus(event.params.rating)
+          .div(BigInt.fromI32(2));
+      }
+      if (event.params.amount < call.stakedAmount) {
+        let user = User.load(call.user);
+        if (user != null) {
+          user.balance = user.balance.plus(
+            call.stakedAmount.minus(event.params.amount)
+          );
+          user.save();
+        }
 
-  entity.save()
+        expert.save();
+        call.save();
+      }
+    }
+  }
 }
 
 export function handleCallScheduled(event: CallScheduledEvent): void {
-  let entity = new CallScheduled(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.callId = event.params.callId
-  entity.user = event.params.user
-  entity.expert = event.params.expert
-  entity.callType = event.params.callType
-  entity.duration = event.params.duration
-  entity.stakedAmount = event.params.stakedAmount
+  log.info("Call Scheduled: {}", [event.params.callId.toHexString()]);
+  let user = User.load(event.params.user.toHexString());
+  let expert = Expert.load(event.params.expert.toHexString());
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  if (user !== null && expert !== null) {
+    let call = new Call(event.params.callId.toHexString());
+    call.user = user.id;
+    call.callType = event.params.callType == 1 ? "VIDEO" : "VOICE";
+    call.expert = expert.id;
+    call.scheduledDuration = event.params.duration;
+    call.stakedAmount = event.params.stakedAmount;
+    call.scheduledAt = event.block.timestamp;
+    call.status = "SCHEDULED";
+    call.save();
+  }
 }
 
 export function handleCallStarted(event: CallStartedEvent): void {
-  let entity = new CallStarted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.callId = event.params.callId
-  entity.user = event.params.user
-  entity.expert = event.params.expert
-  entity.startTime = event.params.startTime
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Call Started: {}", [event.params.callId.toHexString()]);
+  let call = Call.load(event.params.callId.toHexString());
+  if (call != null) {
+    call.status = "STARTED";
+    call.startTime = event.params.startTime;
+    let user = User.load(call.user);
+    if (user != null) {
+      user.balance = user.balance.minus(call.stakedAmount);
+      user.save();
+    }
+    call.save();
+  }
 }
 
 export function handleDeposited(event: DepositedEvent): void {
-  let entity = new Deposited(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.user = event.params.user
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Deposited: {}", [event.params.amount.toString()]);
+  let user = User.load(event.params.user.toHexString());
+  if (user == null) {
+    user = new User(event.params.user.toHexString());
+    user.balance = BigInt.fromI32(0);
+    user.save();
+  }
+  let deposit = new Deposit(event.transaction.hash.toHexString());
+  deposit.amount = event.params.amount;
+  deposit.timestamp = event.block.timestamp;
+  user.balance = user.balance.plus(event.params.amount);
+  deposit.user = user.id;
+  deposit.save();
+  user.save();
 }
 
 export function handleExpertBalanceWithdrawn(
   event: ExpertBalanceWithdrawnEvent
 ): void {
-  let entity = new ExpertBalanceWithdrawn(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.user = event.params.user
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Expert Balance Withdrawn: {}", [event.params.amount.toString()]);
+  let expert = Expert.load(event.params.user.toHexString());
+  if (expert != null) {
+    let withdrawal = new Withdrawal(event.transaction.hash.toHexString());
+    withdrawal.amount = event.params.amount;
+    withdrawal.timestamp = event.block.timestamp;
+    withdrawal.expert = expert.id;
+    withdrawal.save();
+    expert.balance = expert.balance.minus(event.params.amount);
+    expert.save();
+  }
 }
 
 export function handleExpertRegistered(event: ExpertRegisteredEvent): void {
-  let entity = new ExpertRegistered(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.expert = event.params.expert
-  entity.name = event.params.name
-  entity.voiceRate = event.params.voiceRate
-  entity.videoRate = event.params.videoRate
-  entity.cid = event.params.cid
-  entity.expertise = event.params.expertise
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Expert Registered: {}", [event.params.expert.toHexString()]);
+  let entity = new Expert(event.params.expert.toHexString());
+  entity.name = event.params.name;
+  entity.videoRatePerMinute = event.params.videoRate;
+  entity.voiceRatePerMinute = event.params.voiceRate;
+  entity.balance = BigInt.fromI32(0);
+  entity.isRegistered = true;
+  entity.expertise = event.params.expertise;
+  entity.rating = BigInt.fromI32(0);
+  entity.cid = event.params.cid;
+  entity.save();
 }
 
 export function handleOwnershipTransferred(
   event: OwnershipTransferredEvent
-): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
-}
+): void {}
 
 export function handlePlatformBalanceWithdrawn(
   event: PlatformBalanceWithdrawnEvent
 ): void {
-  let entity = new PlatformBalanceWithdrawn(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.user = event.params.user
-  entity.amount = event.params.amount
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  log.info("Platform Balance Withdrawn: {}", [event.params.amount.toString()]);
+  let platform = Platform.load("1");
+  if (platform == null) {
+    platform = new Platform("1");
+    platform.totalFeesCollected = BigInt.fromI32(0);
+    platform.save();
+  }
+  let withdrawal = new Withdrawal(event.transaction.hash.toHexString());
+  withdrawal.amount = event.params.amount;
+  withdrawal.timestamp = event.block.timestamp;
+  withdrawal.platform = platform.id;
+  withdrawal.save();
 }
 
 export function handleupdatedExpertrates(event: updatedExpertratesEvent): void {
-  let entity = new updatedExpertrates(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity.user = event.params.user
-  entity.isVoice = event.params.isVoice
-  entity.updatedRate = event.params.updatedRate
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  let expert = Expert.load(event.params.user.toHexString());
+  if (expert != null) {
+    if (event.params.isVoice) {
+      expert.voiceRatePerMinute = event.params.updatedRate;
+    } else {
+      expert.videoRatePerMinute = event.params.updatedRate;
+    }
+    expert.save();
+  }
 }
