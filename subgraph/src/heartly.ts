@@ -8,10 +8,10 @@ import {
   Deposited as DepositedEvent,
   ExpertBalanceWithdrawn as ExpertBalanceWithdrawnEvent,
   ExpertRegistered as ExpertRegisteredEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
   PlatformBalanceWithdrawn as PlatformBalanceWithdrawnEvent,
   updatedExpertrates as updatedExpertratesEvent,
 } from "../generated/heartly/heartly";
+
 import {
   Call,
   User,
@@ -72,9 +72,6 @@ export function handleCallEnded(event: CallEndedEvent): void {
       );
       call.platformFee = platformFee;
       if (event.params.rating > BigInt.fromI32(0)) {
-        if (expert.rating == null) {
-          expert.rating = BigInt.fromI32(0);
-        }
         expert.rating = expert.rating
           .plus(event.params.rating)
           .div(BigInt.fromI32(2));
@@ -174,10 +171,6 @@ export function handleExpertRegistered(event: ExpertRegisteredEvent): void {
   entity.cid = event.params.cid;
   entity.save();
 }
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {}
 
 export function handlePlatformBalanceWithdrawn(
   event: PlatformBalanceWithdrawnEvent

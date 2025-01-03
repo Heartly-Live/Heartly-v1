@@ -10,7 +10,7 @@ type Expert @entity {
   id: ID! # Wallet address of the expert
   name: String! # Expert's name
   cid: String # IPFS CID
-  rating: BigInt
+  rating: BigInt!
   expertise: String! # Field of expertise
   balance: BigInt! # Expert's current balance in USDC
   withdrawals: [Withdrawal!]! @derivedFrom(field: "expert")
