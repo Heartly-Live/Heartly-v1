@@ -22,6 +22,7 @@ contract Heartly is ReentrancyGuard,Ownable {
         uint256 balance;
         uint256 voiceRatePerMinute;  // in USDC (6 decimals)
         uint256 videoRatePerMinute;  // in USDC (6 decimals)
+        string cid;
         bool isRegistered;
     }
     
@@ -36,6 +37,7 @@ contract Heartly is ReentrancyGuard,Ownable {
         uint256 startTime;
         uint256 endTime;
         uint256 scheduledAt;
+        uint256 rating;
     }
     
     mapping(address => Expert) public experts;
@@ -44,11 +46,12 @@ contract Heartly is ReentrancyGuard,Ownable {
     mapping(address => bytes32[]) public userCalls;     // Store user's call IDs
     mapping(address => bytes32[]) public expertCalls;   // Store expert's call IDs
     
-    event ExpertRegistered(address indexed expert, string name, uint256 voiceRate, uint256 videoRate);
+    event ExpertRegistered(address indexed expert, string name, uint256 voiceRate, uint256 videoRate , string cid);
     event Deposited(address indexed user, uint256 amount);
     event CallScheduled(bytes32 indexed callId, address indexed user, address indexed expert, CallType callType, uint256 duration, uint256 stakedAmount);
     event CallStarted(bytes32 indexed callId, address indexed user, address indexed expert, uint256 startTime);
-    event CallEnded(bytes32 indexed callId, address indexed user, address indexed expert, uint256 duration, uint256 amount);
+    event CallEnded(bytes32 indexed callId, address indexed user, address indexed expert, uint256 duration, uint256 amount , uint256 rating);
+    event updatedExpertrates(address indexed user , bool isVoice , uint256 updatedRate);
     event BalanceWithdrawn(address indexed user, uint256 amount);
      event CallCancelled(bytes32 indexed callId);
 
@@ -77,7 +80,8 @@ contract Heartly is ReentrancyGuard,Ownable {
         string memory _name,
         string memory _expertise,
         uint256 _voiceRatePerMinute,
-        uint256 _videoRatePerMinute
+        uint256 _videoRatePerMinute,
+        string memory _cid
     ) external {
         require(!experts[msg.sender].isRegistered, "Expert already registered");
         require(_voiceRatePerMinute > 0 && _videoRatePerMinute > 0, "Rates must be greater than 0");
@@ -88,12 +92,13 @@ contract Heartly is ReentrancyGuard,Ownable {
             name: _name,
             expertise: _expertise,
             balance: 0,
+            cid:_cid,
             voiceRatePerMinute: _voiceRatePerMinute,
             videoRatePerMinute: _videoRatePerMinute,
             isRegistered: true
         });
         
-        emit ExpertRegistered(msg.sender, _name, _voiceRatePerMinute, _videoRatePerMinute);
+        emit ExpertRegistered(msg.sender, _name, _voiceRatePerMinute, _videoRatePerMinute , _cid);
     }
     
     // Get rate for specific call type
@@ -127,7 +132,8 @@ contract Heartly is ReentrancyGuard,Ownable {
             stakedAmount: totalCost,
             startTime: 0,
             endTime: 0,
-            scheduledAt: block.timestamp 
+            scheduledAt: block.timestamp,
+            rating : 0
         });
         
         calls[callId] = newCall;
@@ -163,7 +169,7 @@ contract Heartly is ReentrancyGuard,Ownable {
     }
     
     // End a call and process payment
-    function endCall(bytes32 _callId) external nonReentrant {
+    function endCall(bytes32 _callId , uint256 _rating) external nonReentrant {
         Call storage call = calls[_callId];
         require(call.user != address(0), "Call does not exist");
         require(msg.sender == call.user || msg.sender == call.expert, "Unauthorized");
@@ -195,9 +201,11 @@ contract Heartly is ReentrancyGuard,Ownable {
         }
         
         call.status = CallStatus.COMPLETED;
+        call.rating = _rating;
         
-        emit CallEnded(_callId, call.user, call.expert, duration, actualCost);
+        emit CallEnded(_callId, call.user, call.expert, duration, actualCost , _rating);
     }
+
     
     // Get user's calls
     function getUserCalls(address _user) external view returns (bytes32[] memory) {
@@ -286,5 +294,16 @@ contract Heartly is ReentrancyGuard,Ownable {
             expert.videoRatePerMinute,
             expert.isRegistered
         );
+    }
+
+    function updateCallRates(address expertAddress ,bool isVoice , uint256 updatedRate) external {
+        Expert storage expert = experts[expertAddress];
+        if(isVoice){
+            expert.voiceRatePerMinute = updatedRate;
+
+        }else{
+            expert.videoRatePerMinute = updatedRate;
+        }
+        emit updatedExpertrates(expertAddress, isVoice, updatedRate);
     }
 }
