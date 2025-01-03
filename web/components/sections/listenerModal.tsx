@@ -29,9 +29,9 @@ export default function ListenerModal({
   onClose,
   listener,
 }: ListenerModalProps) {
-  if (!listener) return null;
-
   const router = useRouter();
+
+  if (!listener) return null;
 
   const handleBeginClick = () => {
     onClose();
