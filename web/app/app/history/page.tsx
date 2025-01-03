@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CallDetailsDialog from "./historyDialog";
 import { PhoneCall, Video } from "lucide-react";
+import { formatDuration, formatDate } from "@/lib/formatters";
 
 interface Call {
   id: string;
@@ -49,34 +50,6 @@ const mockCalls: Call[] = [
   },
   // Add more mock calls here for testing
 ];
-
-// Utility functions
-export function formatDuration(seconds: number): string {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-export function formatDate(timestamp: number): string {
-  return new Date(timestamp * 1000).toLocaleString("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  });
-}
-
-export function formatAmount(amount: string): string {
-  const amountInEth = parseInt(amount) / 1e18;
-  return `${amountInEth.toFixed(4)} ETH`;
-}
-
-export function truncateAddress(address: string): string {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
 
 export default function HistoryPage() {
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);

@@ -9,7 +9,7 @@ import {
   formatDate,
   formatAmount,
   truncateAddress,
-} from "./page";
+} from "@/lib/formatters";
 
 interface Call {
   id: string;
