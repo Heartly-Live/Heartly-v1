@@ -18,7 +18,7 @@ const Page = () => {
     calls: 23,
   });
   return (
-    <div className="bg-gradient-to-b from-[#FFA2C933] to-[#FEBF5D33]">
+    <div className="bg-gradient-to-b from-[#FFA2C933] to-[#FEBF5D33]  h-full">
       {!address ? (
         <div className="flex flex-col justify-center items-center h-full">
           <div className="flex flex-col justify-center items-center gap-4">
@@ -59,17 +59,6 @@ const Page = () => {
             ))}
 
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-2 py-4">
-              <Button variant="ghost" size="sm">
-                ←
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                1 2 3 . . . 23
-              </span>
-              <Button variant="ghost" size="sm">
-                →
-              </Button>
-            </div>
           </main>
           <section className="flex justify-center items-center w-full">
             <BottomNavbar />
