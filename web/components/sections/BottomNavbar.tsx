@@ -16,17 +16,17 @@ const items = [
   {
     title: "profile",
     icon: <User className="h-4 w-4" />,
-    href: "/profile",
+    href: "/app/profile",
   },
   {
     title: "list",
     icon: <List className="h-4 w-4" />,
-    href: "/list",
+    href: "/app",
   },
   {
     title: "history",
     icon: <History className="h-4 w-4" />,
-    href: "/history",
+    href: "/app/history",
   },
 ];
 

@@ -1,35 +1,47 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Logo from "@/assets/Logo.png";
-
 import { ConnectWallet } from "@/components/ui/connectButton";
 import { useAccount } from "wagmi";
-import BottomNavbar from "@/components/sections/BottomNavbar";
 import { Button } from "@/components/ui/button";
 import ListenerCard from "@/components/sections/listener-card";
 
 const Page = () => {
   const { address } = useAccount();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const listeners = Array(8).fill({
     name: "Patient Listener",
     credentials: "M.A Clinical Psychology",
     rating: 3.2,
     calls: 23,
   });
+
+  // Only render the component after it has mounted on the client
+  if (!hasMounted && !address) {
+    return null; // Or a loading spinner
+  }
+
   return (
-    <div className="bg-gradient-to-b from-[#FFA2C933] to-[#FEBF5D33]  h-full">
+    <div>
       {!address ? (
-        <div className="flex flex-col justify-center items-center h-full">
+        <div className="flex flex-col justify-center items-center gap-4 h-screen">
           <div className="flex flex-col justify-center items-center gap-4">
-            <div className="flex flex-col justify-center items-center">
-              <Image src={Logo} alt="Logo" className="w-16 h-16" />
-              <div className="flex flex-col justify-center items-center">
-                <div className="text-3xl font-nunito font-bold">HEARTLY</div>
-                <div className="text-xs font-thin">Talk.Heal.Grow</div>
+            <div className="flex flex-col justify-center items-center gap-4">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <Image src={Logo} alt="Logo" className="w-16 h-16" />
+                <div className="flex flex-col justify-center items-center">
+                  <div className="text-3xl font-nunito font-bold">HEARTLY</div>
+                  <div className="text-xs font-thin">Talk.Heal.Grow</div>
+                </div>
               </div>
+              <ConnectWallet />
             </div>
-            <ConnectWallet />
           </div>
         </div>
       ) : (
@@ -60,9 +72,6 @@ const Page = () => {
 
             {/* Pagination */}
           </main>
-          <section className="flex justify-center items-center w-full">
-            <BottomNavbar />
-          </section>
         </div>
       )}
     </div>
