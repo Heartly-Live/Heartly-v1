@@ -50,8 +50,6 @@ dataSources:
           handler: handleExpertBalanceWithdrawn
         - event: ExpertRegistered(indexed address,string,uint256,uint256,string,string)
           handler: handleExpertRegistered
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
         - event: PlatformBalanceWithdrawn(indexed address,uint256)
           handler: handlePlatformBalanceWithdrawn
         - event: updatedExpertrates(indexed address,bool,uint256)

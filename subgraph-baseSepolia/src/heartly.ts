@@ -79,9 +79,7 @@ export function handleCallEnded(event: CallEndedEvent): void {
       }
       if (event.params.flag) {
         call.flag = call.flag;
-        expert.flags = (expert.flags || BigInt.fromI32(0)).plus(
-          BigInt.fromI32(1)
-        );
+        expert.flags = expert.flags.plus(BigInt.fromI32(1));
       }
       if (event.params.amount < call.stakedAmount) {
         let user = User.load(call.user);

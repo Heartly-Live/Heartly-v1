@@ -18,7 +18,7 @@ type Expert @entity {
   videoRatePerMinute: BigInt! # Rate for video calls per minute in USDC
   isRegistered: Boolean! # Registration status
   calls: [Call!]! @derivedFrom(field: "expert") # Associated calls
-  flags: BigInt
+  flags: BigInt!
 }
 
 type Call @entity {
