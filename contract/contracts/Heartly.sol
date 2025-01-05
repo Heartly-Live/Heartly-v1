@@ -9,7 +9,7 @@ contract Heartly is ReentrancyGuard,Ownable {
     IERC20 public usdc;
     
     enum CallType { VOICE, VIDEO }
-    enum CallStatus { SCHEDULED, ACTIVE, COMPLETED , CANCELLED}
+    enum CallStatus { SCHEDULED, ACTIVE, COMPLETED , CANCELLED , HOLD}
 
       uint256 private constant MAX_CALL_DURATION = 60;
       uint256 private constant CALL_START_WINDOW = 180;
@@ -32,12 +32,12 @@ contract Heartly is ReentrancyGuard,Ownable {
         address expert;
         CallType callType;
         CallStatus status;
-        uint256 scheduledDuration;  // in minutes
         uint256 stakedAmount;
         uint256 startTime;
         uint256 endTime;
         uint256 scheduledAt;
         uint256 rating;
+        uint256 flagged;
     }
     
     mapping(address => Expert) public experts;
@@ -46,14 +46,17 @@ contract Heartly is ReentrancyGuard,Ownable {
     mapping(address => bytes32[]) public userCalls;     // Store user's call IDs
     mapping(address => bytes32[]) public expertCalls;   // Store expert's call IDs
     
-    event ExpertRegistered(address indexed expert, string name, uint256 voiceRate, uint256 videoRate , string cid);
+    event ExpertRegistered(address indexed expert, string name, uint256 voiceRate, uint256 videoRate , string cid , string expertise);
     event Deposited(address indexed user, uint256 amount);
-    event CallScheduled(bytes32 indexed callId, address indexed user, address indexed expert, CallType callType, uint256 duration, uint256 stakedAmount);
+    event CallScheduled(bytes32 indexed callId, address indexed user, address indexed expert, CallType callType, uint256 stakedAmount);
     event CallStarted(bytes32 indexed callId, address indexed user, address indexed expert, uint256 startTime);
-    event CallEnded(bytes32 indexed callId, address indexed user, address indexed expert, uint256 duration, uint256 amount , uint256 rating);
+    event CallEnded(bytes32 indexed callId, address indexed user, address indexed expert, uint256 duration, uint256 amount , uint256 rating , bool flag) ;
     event updatedExpertrates(address indexed user , bool isVoice , uint256 updatedRate);
     event BalanceWithdrawn(address indexed user, uint256 amount);
+    event ExpertBalanceWithdrawn(address indexed user, uint256 amount);    
+    event PlatformBalanceWithdrawn(address indexed user, uint256 amount);
      event CallCancelled(bytes32 indexed callId);
+     event CallHold(bytes32 indexed callId);
 
     constructor(address _usdcAddress) Ownable(msg.sender) {
         require(_usdcAddress != address(0), "Invalid USDC address");
@@ -98,7 +101,7 @@ contract Heartly is ReentrancyGuard,Ownable {
             isRegistered: true
         });
         
-        emit ExpertRegistered(msg.sender, _name, _voiceRatePerMinute, _videoRatePerMinute , _cid);
+        emit ExpertRegistered(msg.sender, _name, _voiceRatePerMinute, _videoRatePerMinute , _cid , _expertise);
     }
     
     // Get rate for specific call type
@@ -108,17 +111,16 @@ contract Heartly is ReentrancyGuard,Ownable {
     }
     
     // Schedule a call
-    function scheduleCall(address _expert, CallType _callType, uint256 _duration) external nonReentrant returns (bytes32) {
+    function scheduleCall(address _expert, CallType _callType) external nonReentrant returns (bytes32) {
         require(experts[_expert].isRegistered, "Expert not registered");
-         require(_duration > 0 && _duration <= MAX_CALL_DURATION, "Invalid duration");
          require(_expert != msg.sender, "Cannot schedule call with yourself"); 
         
         uint256 ratePerMinute = getExpertRate(_expert, _callType);
-        uint256 totalCost = ratePerMinute * _duration;
+
+        // Should have balance atleast for 2 mins of call        
+        require(userBalances[msg.sender] >= ratePerMinute*2, "Insufficient balance. Please deposit more USDC.");
         
-        require(userBalances[msg.sender] >= totalCost, "Insufficient balance. Please deposit more USDC.");
-        
-        userBalances[msg.sender] -= totalCost;
+        uint256 totalCost = userBalances[msg.sender];
         
         bytes32 callId = generateCallId(msg.sender, _expert, block.timestamp);
         
@@ -128,19 +130,19 @@ contract Heartly is ReentrancyGuard,Ownable {
             expert: _expert,
             callType: _callType,
             status: CallStatus.SCHEDULED,
-            scheduledDuration: _duration,
             stakedAmount: totalCost,
             startTime: 0,
             endTime: 0,
             scheduledAt: block.timestamp,
-            rating : 0
+            rating : 0,
+            flagged : 0
         });
         
         calls[callId] = newCall;
         userCalls[msg.sender].push(callId);
         expertCalls[_expert].push(callId);
         
-        emit CallScheduled(callId, msg.sender, _expert, _callType, _duration, totalCost);
+        emit CallScheduled(callId, msg.sender, _expert, _callType, totalCost);
         return callId;
     }
 
@@ -163,26 +165,29 @@ contract Heartly is ReentrancyGuard,Ownable {
         
         call.startTime = block.timestamp;
         call.status = CallStatus.ACTIVE;
-        userBalances[call.user] -= call.stakedAmount;
+        userBalances[call.user] = 0;
         
         emit CallStarted(_callId, call.user, call.expert, call.startTime);
     }
     
     // End a call and process payment
-    function endCall(bytes32 _callId , uint256 _rating) external nonReentrant {
+    function endCall(bytes32 _callId , uint256 _rating , bool flag) external nonReentrant {
         Call storage call = calls[_callId];
         require(call.user != address(0), "Call does not exist");
         require(msg.sender == call.user || msg.sender == call.expert, "Unauthorized");
-        require(call.status == CallStatus.ACTIVE, "Call not active or already completed");
-        
-        call.endTime = block.timestamp;
+        require(call.status == CallStatus.ACTIVE || call.status == CallStatus.HOLD , "Call not active or already completed");
+        if(call.status == CallStatus.ACTIVE){
+            call.endTime = block.timestamp;
+        }
        uint256 duration = (call.endTime - call.startTime + 59) / 60;
         uint256 ratePerMinute = getExpertRate(call.expert, call.callType);
         uint256 actualCost = ratePerMinute * duration;
-        
+
+
         if (actualCost > call.stakedAmount) {
             actualCost = call.stakedAmount;
         }
+
         
         // 20% to platform
         uint256 platformFee = (actualCost *20) / 100 ;
@@ -201,9 +206,17 @@ contract Heartly is ReentrancyGuard,Ownable {
         }
         
         call.status = CallStatus.COMPLETED;
-        call.rating = _rating;
+        if(duration > 300){
+            call.rating = _rating;
+        }else{
+            call.rating = 0;
+        }
+
+        if(flag){
+            call.flagged ++;
+        }
         
-        emit CallEnded(_callId, call.user, call.expert, duration, actualCost , _rating);
+        emit CallEnded(_callId, call.user, call.expert, duration, actualCost , call.rating , flag);
     }
 
     
@@ -223,7 +236,6 @@ contract Heartly is ReentrancyGuard,Ownable {
         address expert,
         CallType callType,
         CallStatus status,
-        uint256 scheduledDuration,
         uint256 stakedAmount,
         uint256 startTime,
         uint256 endTime
@@ -235,7 +247,6 @@ contract Heartly is ReentrancyGuard,Ownable {
             call.expert,
             call.callType,
             call.status,
-            call.scheduledDuration,
             call.stakedAmount,
             call.startTime,
             call.endTime
@@ -265,7 +276,7 @@ contract Heartly is ReentrancyGuard,Ownable {
         experts[msg.sender].balance -= _amount;
         require(usdc.transfer(msg.sender, _amount), "Transfer failed");
 
-        emit BalanceWithdrawn(msg.sender, _amount);
+        emit ExpertBalanceWithdrawn(msg.sender, _amount);
     }
 
     // Platform Fee withdrawl 
@@ -273,7 +284,7 @@ contract Heartly is ReentrancyGuard,Ownable {
         require(platformBalance >= _amount , "Insufficient Balance");
         platformBalance-=_amount;
         require(usdc.transfer(msg.sender,_amount));
-        emit BalanceWithdrawn(msg.sender, _amount);
+        emit PlatformBalanceWithdrawn(msg.sender, _amount);
     }
     
     // Get expert details
@@ -305,5 +316,13 @@ contract Heartly is ReentrancyGuard,Ownable {
             expert.videoRatePerMinute = updatedRate;
         }
         emit updatedExpertrates(expertAddress, isVoice, updatedRate);
+    }
+
+    function callHold(bytes32 _callId) external onlyOwner{
+        Call storage call = calls[_callId];
+        require(call.status == CallStatus.ACTIVE, "Call not active or already completed");
+        call.status = CallStatus.HOLD;
+        call.endTime = block.timestamp;
+        emit CallHold(_callId);
     }
 }
