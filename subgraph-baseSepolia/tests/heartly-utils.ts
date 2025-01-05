@@ -4,13 +4,15 @@ import {
   BalanceWithdrawn,
   CallCancelled,
   CallEnded,
+  CallHold,
   CallScheduled,
   CallStarted,
   Deposited,
   ExpertBalanceWithdrawn,
   ExpertRegistered,
   OwnershipTransferred,
-  PlatformBalanceWithdrawn
+  PlatformBalanceWithdrawn,
+  updatedExpertrates
 } from "../generated/heartly/heartly"
 
 export function createBalanceWithdrawnEvent(
@@ -31,19 +33,13 @@ export function createBalanceWithdrawnEvent(
   return balanceWithdrawnEvent
 }
 
-export function createCallCancelledEvent(
-  callId: Bytes,
-  canceller: Address
-): CallCancelled {
+export function createCallCancelledEvent(callId: Bytes): CallCancelled {
   let callCancelledEvent = changetype<CallCancelled>(newMockEvent())
 
   callCancelledEvent.parameters = new Array()
 
   callCancelledEvent.parameters.push(
     new ethereum.EventParam("callId", ethereum.Value.fromFixedBytes(callId))
-  )
-  callCancelledEvent.parameters.push(
-    new ethereum.EventParam("canceller", ethereum.Value.fromAddress(canceller))
   )
 
   return callCancelledEvent
@@ -54,7 +50,9 @@ export function createCallEndedEvent(
   user: Address,
   expert: Address,
   duration: BigInt,
-  amount: BigInt
+  amount: BigInt,
+  rating: BigInt,
+  flag: boolean
 ): CallEnded {
   let callEndedEvent = changetype<CallEnded>(newMockEvent())
 
@@ -78,8 +76,26 @@ export function createCallEndedEvent(
   callEndedEvent.parameters.push(
     new ethereum.EventParam("amount", ethereum.Value.fromUnsignedBigInt(amount))
   )
+  callEndedEvent.parameters.push(
+    new ethereum.EventParam("rating", ethereum.Value.fromUnsignedBigInt(rating))
+  )
+  callEndedEvent.parameters.push(
+    new ethereum.EventParam("flag", ethereum.Value.fromBoolean(flag))
+  )
 
   return callEndedEvent
+}
+
+export function createCallHoldEvent(callId: Bytes): CallHold {
+  let callHoldEvent = changetype<CallHold>(newMockEvent())
+
+  callHoldEvent.parameters = new Array()
+
+  callHoldEvent.parameters.push(
+    new ethereum.EventParam("callId", ethereum.Value.fromFixedBytes(callId))
+  )
+
+  return callHoldEvent
 }
 
 export function createCallScheduledEvent(
@@ -87,7 +103,6 @@ export function createCallScheduledEvent(
   user: Address,
   expert: Address,
   callType: i32,
-  duration: BigInt,
   stakedAmount: BigInt
 ): CallScheduled {
   let callScheduledEvent = changetype<CallScheduled>(newMockEvent())
@@ -107,12 +122,6 @@ export function createCallScheduledEvent(
     new ethereum.EventParam(
       "callType",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(callType))
-    )
-  )
-  callScheduledEvent.parameters.push(
-    new ethereum.EventParam(
-      "duration",
-      ethereum.Value.fromUnsignedBigInt(duration)
     )
   )
   callScheduledEvent.parameters.push(
@@ -194,6 +203,7 @@ export function createExpertRegisteredEvent(
   name: string,
   voiceRate: BigInt,
   videoRate: BigInt,
+  cid: string,
   expertise: string
 ): ExpertRegistered {
   let expertRegisteredEvent = changetype<ExpertRegistered>(newMockEvent())
@@ -217,6 +227,9 @@ export function createExpertRegisteredEvent(
       "videoRate",
       ethereum.Value.fromUnsignedBigInt(videoRate)
     )
+  )
+  expertRegisteredEvent.parameters.push(
+    new ethereum.EventParam("cid", ethereum.Value.fromString(cid))
   )
   expertRegisteredEvent.parameters.push(
     new ethereum.EventParam("expertise", ethereum.Value.fromString(expertise))
@@ -266,4 +279,29 @@ export function createPlatformBalanceWithdrawnEvent(
   )
 
   return platformBalanceWithdrawnEvent
+}
+
+export function createupdatedExpertratesEvent(
+  user: Address,
+  isVoice: boolean,
+  updatedRate: BigInt
+): updatedExpertrates {
+  let updatedExpertratesEvent = changetype<updatedExpertrates>(newMockEvent())
+
+  updatedExpertratesEvent.parameters = new Array()
+
+  updatedExpertratesEvent.parameters.push(
+    new ethereum.EventParam("user", ethereum.Value.fromAddress(user))
+  )
+  updatedExpertratesEvent.parameters.push(
+    new ethereum.EventParam("isVoice", ethereum.Value.fromBoolean(isVoice))
+  )
+  updatedExpertratesEvent.parameters.push(
+    new ethereum.EventParam(
+      "updatedRate",
+      ethereum.Value.fromUnsignedBigInt(updatedRate)
+    )
+  )
+
+  return updatedExpertratesEvent
 }

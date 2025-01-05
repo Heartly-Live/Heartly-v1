@@ -8,9 +8,9 @@ dataSources:
     name: heartly
     network: base-sepolia
     source:
-      address: "0xE0a3d609318b219D91B6DDb52eC1511fc83119B9"
+      address: "0x3D8B5AAC5723769ba3FF7888944540158a1B1E08"
       abi: heartly
-      startBlock: 19766965
+      startBlock: 20148320
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -19,6 +19,7 @@ dataSources:
         - BalanceWithdrawn
         - CallCancelled
         - CallEnded
+        - CallHold
         - CallScheduled
         - CallStarted
         - Deposited
@@ -26,17 +27,20 @@ dataSources:
         - ExpertRegistered
         - OwnershipTransferred
         - PlatformBalanceWithdrawn
+        - updatedExpertrates
       abis:
         - name: heartly
           file: ./abis/heartly.json
       eventHandlers:
         - event: BalanceWithdrawn(indexed address,uint256)
           handler: handleBalanceWithdrawn
-        - event: CallCancelled(indexed bytes32,indexed address)
+        - event: CallCancelled(indexed bytes32)
           handler: handleCallCancelled
-        - event: CallEnded(indexed bytes32,indexed address,indexed address,uint256,uint256)
+        - event: CallEnded(indexed bytes32,indexed address,indexed address,uint256,uint256,uint256,bool)
           handler: handleCallEnded
-        - event: CallScheduled(indexed bytes32,indexed address,indexed address,uint8,uint256,uint256)
+        - event: CallHold(indexed bytes32)
+          handler: handleCallHold
+        - event: CallScheduled(indexed bytes32,indexed address,indexed address,uint8,uint256)
           handler: handleCallScheduled
         - event: CallStarted(indexed bytes32,indexed address,indexed address,uint256)
           handler: handleCallStarted
@@ -44,10 +48,12 @@ dataSources:
           handler: handleDeposited
         - event: ExpertBalanceWithdrawn(indexed address,uint256)
           handler: handleExpertBalanceWithdrawn
-        - event: ExpertRegistered(indexed address,string,uint256,uint256,string)
+        - event: ExpertRegistered(indexed address,string,uint256,uint256,string,string)
           handler: handleExpertRegistered
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleOwnershipTransferred
         - event: PlatformBalanceWithdrawn(indexed address,uint256)
           handler: handlePlatformBalanceWithdrawn
+        - event: updatedExpertrates(indexed address,bool,uint256)
+          handler: handleupdatedExpertrates
       file: ./src/heartly.ts

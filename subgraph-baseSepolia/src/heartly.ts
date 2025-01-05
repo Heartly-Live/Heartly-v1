@@ -8,9 +8,11 @@ import {
   Deposited as DepositedEvent,
   ExpertBalanceWithdrawn as ExpertBalanceWithdrawnEvent,
   ExpertRegistered as ExpertRegisteredEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
   PlatformBalanceWithdrawn as PlatformBalanceWithdrawnEvent,
-} from "../generated/Heartly/Heartly";
+  updatedExpertrates as updatedExpertratesEvent,
+  CallHold as CallHoldEvent,
+} from "../generated/heartly/heartly";
+
 import {
   Call,
   User,
@@ -51,6 +53,7 @@ export function handleCallEnded(event: CallEndedEvent): void {
     call.actualDuration = event.params.duration;
     call.amountPaid = event.params.amount;
     call.endTime = event.block.timestamp;
+    call.rating = event.params.rating;
 
     let expert = Expert.load(call.expert);
     if (expert != null) {
@@ -69,7 +72,17 @@ export function handleCallEnded(event: CallEndedEvent): void {
         event.params.amount.minus(platformFee)
       );
       call.platformFee = platformFee;
-
+      if (event.params.rating > BigInt.fromI32(0)) {
+        expert.rating = expert.rating
+          .plus(event.params.rating)
+          .div(BigInt.fromI32(2));
+      }
+      if (event.params.flag) {
+        call.flag = call.flag;
+        expert.flags = (expert.flags || BigInt.fromI32(0)).plus(
+          BigInt.fromI32(1)
+        );
+      }
       if (event.params.amount < call.stakedAmount) {
         let user = User.load(call.user);
         if (user != null) {
@@ -78,6 +91,7 @@ export function handleCallEnded(event: CallEndedEvent): void {
           );
           user.save();
         }
+
         expert.save();
         call.save();
       }
@@ -95,7 +109,6 @@ export function handleCallScheduled(event: CallScheduledEvent): void {
     call.user = user.id;
     call.callType = event.params.callType == 1 ? "VIDEO" : "VOICE";
     call.expert = expert.id;
-    call.scheduledDuration = event.params.duration;
     call.stakedAmount = event.params.stakedAmount;
     call.scheduledAt = event.block.timestamp;
     call.status = "SCHEDULED";
@@ -114,6 +127,16 @@ export function handleCallStarted(event: CallStartedEvent): void {
       user.balance = user.balance.minus(call.stakedAmount);
       user.save();
     }
+    call.save();
+  }
+}
+
+export function handleCallHold(event: CallHoldEvent): void {
+  log.info("Call Hold: {}", [event.params.callId.toHexString()]);
+  let call = Call.load(event.params.callId.toHexString());
+  if (call != null) {
+    call.status = "HOLD";
+    call.endTime = event.block.timestamp;
     call.save();
   }
 }
@@ -160,12 +183,11 @@ export function handleExpertRegistered(event: ExpertRegisteredEvent): void {
   entity.balance = BigInt.fromI32(0);
   entity.isRegistered = true;
   entity.expertise = event.params.expertise;
+  entity.rating = BigInt.fromI32(0);
+  entity.cid = event.params.cid;
+  entity.flags = BigInt.fromI32(0);
   entity.save();
 }
-
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
-): void {}
 
 export function handlePlatformBalanceWithdrawn(
   event: PlatformBalanceWithdrawnEvent
@@ -182,4 +204,16 @@ export function handlePlatformBalanceWithdrawn(
   withdrawal.timestamp = event.block.timestamp;
   withdrawal.platform = platform.id;
   withdrawal.save();
+}
+
+export function handleupdatedExpertrates(event: updatedExpertratesEvent): void {
+  let expert = Expert.load(event.params.user.toHexString());
+  if (expert != null) {
+    if (event.params.isVoice) {
+      expert.voiceRatePerMinute = event.params.updatedRate;
+    } else {
+      expert.videoRatePerMinute = event.params.updatedRate;
+    }
+    expert.save();
+  }
 }

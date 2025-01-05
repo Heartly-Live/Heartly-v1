@@ -26,7 +26,6 @@ type Call @entity {
   expert: Expert! # Expert who is part of the call
   callType: String! # VOICE or VIDEO
   status: String! # Current status of the call (SCHEDULED, ACTIVE, etc.)
-  scheduledDuration: BigInt! # Scheduled duration in minutes
   actualDuration: BigInt # Actual duration in minutes
   stakedAmount: BigInt! # Amount staked for the call
   amountPaid: BigInt # Amount paid for the call
@@ -35,6 +34,7 @@ type Call @entity {
   scheduledAt: BigInt! # Timestamp when the call was scheduled
   platformFee: BigInt # Fee taken by the platform
   rating: BigInt
+  flags: BigInt
 }
 
 type Deposit @entity {
