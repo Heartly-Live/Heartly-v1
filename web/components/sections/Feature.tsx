@@ -43,18 +43,18 @@ export function Features() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16">
           <FeatureCard
             featureImage={FeatureImage}
-            title="Absolute Privacy"
-            description="Your journey is yours alone. Heartly ensures complete privacy through decentralized Web3 technology, storing no user data."
+            title="Centralized Data Custody"
+            description="Platforms holding vast amounts of user data often misuse or exploit this information for unintended purposes."
           />
           <FeatureCard
             featureImage={FeatureImage2}
-            title="Personalized Guidance"
-            description="Experience mindfulness tailored to your unique needs, without interference or distractions."
+            title="Data Security and Privacy Compromises"
+            description="Sensitive user data is frequently at risk of breaches and leaks, undermining trust and safety."
           />
           <FeatureCard
             featureImage={FeatureImage3}
-            title="Web3-Powered Freedom"
-            description="Enjoy a seamless experience with no sign-ups or personal data sharing—just pure focus on self-care."
+            title="Monetization of User Data"
+            description="Current systems profit by sharing and selling user data, often without explicit consent, leaving users exposed and powerless."
           />
         </div>
       </div>

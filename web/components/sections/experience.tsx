@@ -45,18 +45,18 @@ export function Experience() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16">
           <ExperienceCard
             ExperienceImage={ExperienceImage}
-            title="Global Accessibility 🌎"
-            description="Connect with a global audience through a multilingual platform designed for inclusivity."
+            title="Web3-Based Privacy"
+            description="Harnessing blockchain's transparency and immutability to ensure user data is encrypted and never accessible to third parties."
           />
           <ExperienceCard
             ExperienceImage={ExperienceImage2}
-            title="Targeted Engagement 🎯"
-            description="Dive into curated topics tailored to your mindfulness and self-help needs."
+            title="End-to-End Point-to-Point Network Calls"
+            description="Direct communication channels eliminate intermediaries, enhancing both security and efficiency."
           />
           <ExperienceCard
             ExperienceImage={ExperienceImage3}
-            title="Credible Access Control ⛔️"
-            description="Ensuring secure and validated participation with wallet-based access and accountability."
+            title="Smart Contract-Enabled Payments"
+            description="Seamless and trustless transactions empower users to engage with services confidently, without exposing sensitive financial data."
           />
         </div>
       </div>
