@@ -131,8 +131,7 @@ export const ConnectWallet = () => {
                   </button>
                 </div>
               );
-            })()}
-          </div>
+            })()}          </div>
         );
       }}
     </ConnectButton.Custom>

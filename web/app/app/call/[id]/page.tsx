@@ -18,7 +18,7 @@ export default function CallPage() {
       setIsConnected(!isConnected);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isConnected]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
