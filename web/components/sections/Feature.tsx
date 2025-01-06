@@ -31,30 +31,30 @@ export function Features() {
     <section id="what" className="py-24 px-4 bg-[#F8C1D8] bg-opacity-10">
       <div className="container font-nunito mx-auto">
         <h2 className="text-4xl md:text-5xl font-medium text-center mb-16">
-          A{" "}
+        How  {" "}
           <span className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-transparent bg-clip-text font-medium">
-            new
+          Heartly
           </span>{" "}
-          era of
+          Protects and 
           <br />
-          Mindful Living
+          Supports You
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16">
           <FeatureCard
             featureImage={FeatureImage}
-            title="Centralized Data Custody"
-            description="Platforms holding vast amounts of user data often misuse or exploit this information for unintended purposes."
+            title="Start Anonymously"
+            description="No personal information is required to join. Just connect wallet and begin."
           />
           <FeatureCard
             featureImage={FeatureImage2}
-            title="Data Security and Privacy Compromises"
-            description="Sensitive user data is frequently at risk of breaches and leaks, undermining trust and safety."
+            title="Secure Interactions"
+            description="Every conversation is encrypted and secured using zk-proof technology, ensuring full confidentiality."
           />
           <FeatureCard
             featureImage={FeatureImage3}
-            title="Monetization of User Data"
-            description="Current systems profit by sharing and selling user data, often without explicit consent, leaving users exposed and powerless."
+            title="Your Space, Your Rules"
+            description="Engage in conversations without fear of judgment or breaches."
           />
         </div>
       </div>
