@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -5,6 +7,7 @@ import Image from "next/image";
 import Logo from "@/assets/Logo.png";
 // import Doodle1 from "@/assets/Doodle1.png"; // Add your doodle images here
 import Doodle2 from "@/assets/GrowDoodle.png";
+import Rocket from "@/assets/rocket.gif";
 
 interface NavItemProps {
   href: string;
@@ -52,7 +55,28 @@ export function Hero() {
             <NavItem href="#why">Why</NavItem>
             <NavItem href="#how">How</NavItem>
           </div>
+          
           <div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-semibold text-muted-foreground">
+                Built on Web3
+              </span>
+              <div className="w-12 h-12">
+                <Image
+                  src={Rocket}
+                  alt="Rocket GIF"
+                  width={48}
+                  height={48}
+                  className="object-cover"
+                  unoptimized={true}
+                />
+              </div>
+            </div>
+            <div className="absolute top-8 right-8">
+        <NavItem href="#listner"  className="bg-[#FFA2C9] text-white px-6 py-3 rounded-full font-medium">
+          Become a listener
+        </NavItem>
+      </div>
           </div>
         </div>
       </nav>
@@ -82,7 +106,7 @@ export function Hero() {
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
           >
-            Start Your Journey
+            Start Your Journey 🚀
           </Button>
         </Link>
       </section>

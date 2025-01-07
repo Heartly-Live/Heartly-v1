@@ -65,7 +65,7 @@ export function What() {
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
           >
-            Join the future of mental wellness today
+            Join the future of mental wellness today ❤️
           </Button>
         </Link>
       </div>

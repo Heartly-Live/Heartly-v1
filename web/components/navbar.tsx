@@ -40,6 +40,7 @@ export function Navbar() {
           <NavItem href="/why">Why</NavItem>
           <NavItem href="/how">How</NavItem>
         </div>
+        
         <div>
           <NavItem href="/knowmore">Know More!</NavItem>
         </div>
