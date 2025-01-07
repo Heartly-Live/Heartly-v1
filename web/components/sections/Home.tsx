@@ -52,7 +52,8 @@ export function Hero() {
             <NavItem href="#why">Why</NavItem>
             <NavItem href="#how">How</NavItem>
           </div>
-          <div></div>
+          <div>
+          </div>
         </div>
       </nav>
 

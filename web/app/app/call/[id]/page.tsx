@@ -6,11 +6,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import FeedbackDialog from "@/components/sections/feedbackDialog";
-import ComingSoon from "@/components/sections/ComingSoon";
-
-export function ComingSoonPage() {
-  return <ComingSoon />;
-}
 
 export default function CallPage() {
   

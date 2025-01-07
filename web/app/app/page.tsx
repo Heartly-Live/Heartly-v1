@@ -52,7 +52,7 @@ const Page = () => {
                 <Image src={Logo} alt="Logo" className="w-12 h-12" />
                 <div className="flex flex-col items-start">
                   <div className="text-2xl font-nunito font-bold">
-                    {`Let's Talk`}
+                    {`Let&apos;s Talk`}
                   </div>
                   <div className="text-xs font-thin flex justify-center items-center gap-2">
                     <div>243 listeners online</div>

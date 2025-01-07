@@ -46,7 +46,7 @@ export function Experience() {
           <ExperienceCard
             ExperienceImage={ExperienceImage}
             title="Web3-Based Privacy"
-            description="Harnessing blockchain's transparency and immutability to ensure user data is encrypted and never accessible to third parties."
+            description="Harnessing blockchain&apos;s transparency and immutability to ensure user data is encrypted and never accessible to third parties."
           />
           <ExperienceCard
             ExperienceImage={ExperienceImage2}

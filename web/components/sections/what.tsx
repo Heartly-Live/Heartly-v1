@@ -39,7 +39,7 @@ export function What() {
         A Confidential Space for Mental Wellness
       </h2>
       <p className="text-lg mb-8 font-normal text-center">
-      Heartly isn't just a mental wellness platform; it’s a technological breakthrough designed for Web3 enthusiasts and tech professionals. Here's why we’re different:
+      Heartly isn&apos;t just a mental wellness platform; it&apos;s a technological breakthrough designed for Web3 enthusiasts and tech professionals. Here&apos;s why we’re different:
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16">
           <FeatureCard
