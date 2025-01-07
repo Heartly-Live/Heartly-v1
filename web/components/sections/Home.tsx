@@ -50,7 +50,7 @@ export function Hero() {
           <div className="hidden md:flex justify-evenly gap-20">
             <NavItem href="#what">What</NavItem>
             <NavItem href="#why">Why</NavItem>
-            <NavItem href="#testimonials">Testimonials</NavItem>
+            <NavItem href="#how">How</NavItem>
           </div>
           <div></div>
         </div>
@@ -66,7 +66,17 @@ export function Hero() {
         <p className="text-lg mb-8 font-normal">
           Talk about anything & everything, anonymously.
         </p>
-        <Link href="/app">
+        {/* <Link href="/app">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
+          >
+            Start Your Journey
+          </Button>
+        </Link> */}
+        <Link href="/coming-soon">
+          {" "}
+          {/* // Changed from "/app" to "/coming-soon" */}
           <Button
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"

@@ -6,8 +6,14 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import FeedbackDialog from "@/components/sections/feedbackDialog";
+import ComingSoon from "@/components/sections/ComingSoon";
+
+export function ComingSoonPage() {
+  return <ComingSoon />;
+}
 
 export default function CallPage() {
+  
   //   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
   const [time, setTime] = useState(0);
@@ -50,6 +56,7 @@ export default function CallPage() {
   };
 
   return (
+    
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-orange-300 to-pink-300">
       {/* Ripple circles */}
       <div className="absolute inset-0 flex items-center justify-center">
