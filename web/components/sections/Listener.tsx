@@ -1,16 +1,6 @@
-import Image from "next/image";
 import { StaticImageData } from "next/image";
-import FeatureImage from "@/assets/Group 35.png";
-import FeatureImage2 from "@/assets/Group 37.png";
-import FeatureImage3 from "@/assets/Group 36.png";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-interface FeatureCardProps {
-  title: string;
-  description: string;
-  featureImage: StaticImageData;
-}
 
 export function Listener() {
   return (
@@ -102,7 +92,7 @@ export function Listener() {
                 </h4>
                 <p>
                   Be part of a growing community of listeners making a real
-                  difference in people's lives.
+                  difference in people&apos;s lives.
                 </p>
               </div>
             </div>
