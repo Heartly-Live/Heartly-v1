@@ -2,19 +2,16 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { http, WagmiProvider } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum, base } from "wagmi/chains";
+import { base, baseSepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: process.env.NEXT_PUBLIC_PROJECT_ID || "",
-  chains: [mainnet, polygon, optimism, arbitrum, base],
+  chains: [baseSepolia, base],
   transports: {
-    [mainnet.id]: http(),
-    [polygon.id]: http(),
-    [optimism.id]: http(),
-    [arbitrum.id]: http(),
     [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
   ssr: true, // If your dApp uses server side rendering (SSR)
 });
