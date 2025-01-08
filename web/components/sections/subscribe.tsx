@@ -37,7 +37,7 @@ export function Subscribe() {
             Stay Updated!
           </h2>
           <p className="text-lg mt-4 font-normal">
-            Be the first to experience the awesome!
+          Listening is the first step to understanding. Join our listener community today and be a voice of comfort and support.
           </p>
           <div className="flex mt-8 gap-2">
             <input
@@ -51,7 +51,7 @@ export function Subscribe() {
               onClick={handleSubscribe}
               className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg"
             >
-              Subscribe
+              Become a Listener Today
             </Button>
           </div>
         </div>

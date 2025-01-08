@@ -30,21 +30,30 @@ function FeatureCard({ title, description, featureImage }: FeatureCardProps) {
 export function What() {
   return (
     <section id="how" className="py-24 px-4 sm:px-8 md:px-16">
-    <div className="container mx-auto flex flex-col items-center gap-12 sm:gap-16 md:gap-24">
-      <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium text-center leading-tight">
-      Discover {" "}
-        <span className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-transparent bg-clip-text">
-        Heartly: 
-        </span>{" "}
-        A Confidential Space for Mental Wellness
-      </h2>
-      <p className="text-lg mb-8 font-normal text-center">
-      Heartly isn&apos;t just a mental wellness platform; it&apos;s a technological breakthrough designed for Web3 enthusiasts and tech professionals. Here&apos;s why we’re different:
+      <div className="container mx-auto flex flex-col items-center gap-12 sm:gap-16 md:gap-24">
+        <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium text-center leading-tight flex flex-col">
+          <span>
+            Discover{" "}
+            <span className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-transparent bg-clip-text">
+              Heartly
+            </span>
+          </span>
+          <span className="text-3xl">
+            A Confidential Space for Mental Wellness
+          </span>
+        </h2>
+
+        <p className="text-lg mb-8 font-normal text-center flex flex-col">
+          <span>Heartly isn&apos;t just a mental wellness platform</span>
+          <span>
+            It&apos;s a technological breakthrough designed for Web3 enthusiasts
+            and tech professionals
+          </span>
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 md:gap-16">
           <FeatureCard
             featureImage={FeatureImage}
-            title="Privacy-Powered by Zero-Knowledge Proofs"
+            title="Privacy-Powered by ZK Proofs"
             description="Your identity and data remain completely private, secured by advanced cryptographic technology."
           />
           <FeatureCard
@@ -69,6 +78,6 @@ export function What() {
           </Button>
         </Link>
       </div>
-      </section>
-  )
+    </section>
+  );
 }
