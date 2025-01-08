@@ -15,6 +15,30 @@ export const cancelCall = async (callId: string, account: any) => {
   console.log(tx);
 };
 
+// Before Depositing USDC , you need to approve the contract to spend the USDC
+export const approve = async (amount: number, account: any) => {
+  const amountInWei = amount * 10 ** 6;
+  const tx = await walletClient.writeContract({
+    address: "0x", // replace with the address of the USDC contract in base Sepolia testnet
+    abi: [
+      {
+        inputs: [
+          { internalType: "address", name: "spender", type: "address" },
+          { internalType: "uint256", name: "amount", type: "uint256" },
+        ],
+        name: "approve",
+        outputs: [{ internalType: "bool", name: "", type: "bool" }],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
+    functionName: "approve",
+    args: ["0x", BigInt(amountInWei)],
+    account,
+  });
+  console.log(tx);
+};
+
 // To Deposit USDC to the contract by user
 export const deposit = async (amount: number, account: any) => {
   // If the amount is in USDC , we need to convert it to wei
@@ -24,7 +48,7 @@ export const deposit = async (amount: number, account: any) => {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "deposit",
-    args: [amountInWei],
+    args: [BigInt(amountInWei)],
     account,
   });
 
@@ -56,7 +80,7 @@ export const expertWithdrawBalance = async (amount: number, account: any) => {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "expertWithdrawBalance",
-    args: [amountInWei],
+    args: [BigInt(amountInWei)],
     account,
   });
   console.log(tx);
@@ -70,7 +94,7 @@ export const platformWithdrawBalance = async (amount: number, account: any) => {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "platformWithdrawBalance",
-    args: [amountInWei],
+    args: [BigInt(amountInWei)],
     account,
   });
   console.log(tx);
@@ -98,8 +122,8 @@ export const registerExpert = async (
     args: [
       name,
       expertise,
-      voiceRatePerMinuteInWei,
-      videoRatePerMinuteInWei,
+      BigInt(voiceRatePerMinuteInWei), // voiceRatePerMinuteInWei,
+      BigInt(videoRatePerMinuteInWei), // videoRatePerMinuteInWei,
       cid,
     ],
     account,
@@ -168,7 +192,7 @@ export const withdrawBalance = async (amount: number, account: any) => {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "withdrawBalance",
-    args: [amountInWei],
+    args: [BigInt(amountInWei)],
     account,
   });
   console.log(tx);
