@@ -188,3 +188,33 @@ export const getCallDetails = async (callId: string) => {
 
 // Note , if you want to make any write calls to the contract , you can use the walletClient
 // if you want to make any read calls to the contract , you can use the publicClient
+
+// @utkarsh
+
+// import { createWalletClient, http } from "viem";
+// import { privateKeyToAccount } from "viem/accounts";
+// import { baseSepolia } from "viem/chains";
+// first convert the primary key to account
+
+// const account = privateKeyToAccount("0x...");
+
+// create a client like this
+
+// export const client = createWalletClient({
+//     account: account,
+//   chain: baseSepolia,
+//   transport: http(),
+// })
+
+// Note , redeploy the contracts using the account that you want to use , such that the owner of the contract is the account that you want to use
+
+// Call hold by the contract owner . To test this function , use the walletClient
+// export const callHold = async (callId: string) => {
+//   const tx = await walletClient.writeContract({
+//     address: CONTRACT_ADDRESS,
+//     abi: CONTRACT_ABI,
+//     functionName: "callHold",
+//     args: [callId],
+//   });
+//   console.log(tx);
+// };
