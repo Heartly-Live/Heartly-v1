@@ -39,22 +39,18 @@ export function Subscribe() {
           <p className="text-lg mt-4 font-normal">
           Listening is the first step to understanding. Join our listener community today and be a voice of comfort and support.
           </p>
-          <div className="flex mt-8 gap-2">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#FEBF5D]"
-            />
-            <Button 
+          <div className='my-4'>
+          <Button 
               onClick={handleSubscribe}
               className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg"
             >
               Become a Listener Today
             </Button>
           </div>
+            
+        
         </div>
+        
         
         <div className="hidden md:block">
           <Image

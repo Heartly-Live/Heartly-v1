@@ -7,6 +7,8 @@ import Image from "next/image";
 import Logo from "@/assets/Logo.png";
 // import Doodle1 from "@/assets/Doodle1.png"; // Add your doodle images here
 import Doodle2 from "@/assets/GrowDoodle.png";
+import { TwitterIcon } from "lucide-react";
+import DiscordIcon from "@/assets/discord-logo-icon-editorial-free-vector.jpg";
 
 interface NavItemProps {
   href: string;
@@ -50,18 +52,20 @@ export function Hero() {
             </div>
           </Link>
           <div className="hidden md:flex justify-evenly gap-20">
-            <NavItem href="#what">What</NavItem>
+            <NavItem href="#how">What</NavItem>
             <NavItem href="#why">Why</NavItem>
-            <NavItem href="#how">How</NavItem>
+            <NavItem href="#what">How</NavItem>
           </div>
-          
+
           <div>
-           
             <div className="absolute top-8 right-8">
-        <NavItem href="#listner"  className="bg-[#FFA2C9] text-white px-6 py-3 rounded-full font-medium">
-          Become a listener
-        </NavItem>
-      </div>
+              <NavItem
+                href="https://tripetto.app/run/X6PZRUDEGB"
+                className="bg-[#FFA2C9] text-white px-6 py-3 rounded-full font-medium"
+              >
+                Become a listener
+              </NavItem>
+            </div>
           </div>
         </div>
       </nav>
@@ -94,6 +98,29 @@ export function Hero() {
             Start Your Journey 🚀
           </Button>
         </Link>
+        <div className="flex my-4 space-x-4">
+          <span className="text-sm">Follow us :</span>
+          <a
+            href="https://x.com/heartly_live"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <TwitterIcon className="h-6 w-6" />
+          </a>
+          <a
+            href="https://discord.gg/FEEQsswa"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src={DiscordIcon}
+              alt="Discord"
+              width={24}
+              height={24}
+              className="h-6 w-6"
+            />
+          </a>
+        </div>
       </section>
     </div>
   );

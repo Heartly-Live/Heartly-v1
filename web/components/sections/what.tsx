@@ -30,7 +30,7 @@ function FeatureCard({ title, description, featureImage }: FeatureCardProps) {
 export function What() {
   return (
     <section id="how" className="py-24 px-4 sm:px-8 md:px-16">
-      <div className="container mx-auto flex flex-col items-center gap-12 sm:gap-16 md:gap-24">
+      <div className="container mx-auto flex flex-col items-center gap-12 sm:gap-16 md:gap-14">
         <h2 className="text-4xl sm:text-5xl md:text-6xl font-medium text-center leading-tight flex flex-col">
           <span>
             Discover{" "}
@@ -43,7 +43,7 @@ export function What() {
           </span>
         </h2>
 
-        <p className="text-lg mb-8 font-normal text-center flex flex-col">
+        <p className="text-lg font-normal text-center flex flex-col">
           <span>Heartly isn&apos;t just a mental wellness platform</span>
           <span>
             It&apos;s a technological breakthrough designed for Web3 enthusiasts
