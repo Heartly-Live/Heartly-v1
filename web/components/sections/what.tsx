@@ -67,9 +67,9 @@ export function What() {
             description="Feel safe sharing your thoughts, knowing you’re in a secure and anonymous environment."
           />
         </div>
-        <Link href="/coming-soon">
+        <Link href="https://tripetto.app/run/X6PZRUDEGB">
           {" "}
-          {/* Changed from "/app" to "/coming-soon" */}
+          {/* Changed from "/app" to "a link" */}
           <Button
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"

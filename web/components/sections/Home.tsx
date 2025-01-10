@@ -84,7 +84,7 @@ export function Hero() {
             Start Your Journey
           </Button>
         </Link> */}
-        <Link href="/coming-soon">
+        <Link href="https://tripetto.app/run/X6PZRUDEGB">
           {" "}
           {/* // Changed from "/app" to "/coming-soon" */}
           <Button

@@ -137,13 +137,13 @@ export function Listener() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/coming-soon">
+            <Link href="https://tripetto.app/run/X6PZRUDEGB">
               <Button className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white hover:from-[#FFA2C9] hover:to-[#FEBF5D]">
                 Become a Listener Now
               </Button>
             </Link>
 
-            <Link href="/coming-soon">
+            <Link href="https://tripetto.app/run/X6PZRUDEGB">
               <Button
                 variant="outline"
                 className="border-2 border-[#FFA2C9] text-[#FFA2C9] hover:bg-[#FFA2C9] hover:text-white"
