@@ -1,8 +1,11 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
+import { useAccount, useDisconnect } from "wagmi"; // Import useDisconnect
 
 export const ConnectWallet = () => {
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect(); 
   return (
     <ConnectButton.Custom>
       {({
@@ -137,4 +140,9 @@ export const ConnectWallet = () => {
       }}
     </ConnectButton.Custom>
   );
+};
+
+export const useDisconnectWallet = () => {
+  const { disconnect } = useDisconnect();
+  return disconnect;
 };

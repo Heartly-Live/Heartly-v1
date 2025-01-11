@@ -7,12 +7,15 @@ import { useEffect, useState } from "react";
 import { DepositDialog } from "@/components/sections/depositDialog";
 import { ListenerRegistrationDialog } from "@/components/sections/listenerRegistration";
 import { Wallet } from "lucide-react";
-import { ConnectWallet } from "@/components/ui/connectButton";
+import { ConnectWallet, useDisconnectWallet } from "@/components/ui/connectButton";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
   const [showListenerDialog, setShowListenerDialog] = useState(false);
   const [isListener, setIsListener] = useState(false); // This would come from your auth state
+  const router = useRouter();
+  const disconnectWallet = useDisconnectWallet();
 
   const userProfile = {
     name: "Sarah Wilson",
@@ -32,6 +35,12 @@ export default function ProfilePage() {
     setIsListener(false);
   }, []);
 
+  const handleLogout = () => {
+    disconnectWallet(); // Disconnect the wallet
+    router.push("/app"); // Navigate back to the previous screen
+  };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
       <div className="max-w-md mx-auto p-4 pb-16">
@@ -49,7 +58,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Balance Section */}
-        <Card className="mb-6">
+        <Card className="mb-6 bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -71,7 +80,7 @@ export default function ProfilePage() {
 
         {/* Listener Section */}
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-6 bg-white">
             {!isListener ? (
               <div className="text-center">
                 <h2 className="text-lg font-semibold mb-2">
@@ -86,7 +95,16 @@ export default function ProfilePage() {
                 >
                   Register as Listener
                 </Button>
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </div>
+              
             ) : (
               <div>
                 <h2 className="text-lg font-semibold mb-4">Listener Profile</h2>

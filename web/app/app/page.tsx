@@ -2,14 +2,24 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Logo from "@/assets/Logo.png";
-import { ConnectWallet } from "@/components/ui/connectButton";
+import { ConnectWallet, useDisconnectWallet } from "@/components/ui/connectButton"; // Import disconnect function
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import ListenerCard from "@/components/sections/listener-card";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { address } = useAccount();
   const [hasMounted, setHasMounted] = useState(false);
+  const router = useRouter();
+  const disconnectWallet = useDisconnectWallet(); // Use the custom hook
+
+
+  const handleLogout = () => {
+    disconnectWallet(); // Disconnect the wallet
+    router.push("/app"); // Navigate back to the previous screen
+  };
 
   useEffect(() => {
     setHasMounted(true);
@@ -40,7 +50,7 @@ const Page = () => {
                   <div className="text-xs font-thin">Talk.Heal.Grow</div>
                 </div>
               </div>
-              <ConnectWallet />
+              <Input placeholder="username" className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg" />               <ConnectWallet />
             </div>
           </div>
         </div>
@@ -60,9 +70,14 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <Button variant={"outline"} className="font-nunito rounded-md">
-                Filter
-              </Button>
+              <Button
+            variant="secondary"
+            size="lg"
+            className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
             </div>
           </section>
           <main className="px-4 space-y-4 w-full">
@@ -72,6 +87,7 @@ const Page = () => {
 
             {/* Pagination */}
           </main>
+          
         </div>
       )}
     </div>
