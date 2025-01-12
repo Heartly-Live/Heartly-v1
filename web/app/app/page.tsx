@@ -48,9 +48,13 @@ const Page = () => {
                 <div className="flex flex-col justify-center items-center">
                   <div className="text-3xl font-nunito font-bold">HEARTLY</div>
                   <div className="text-xs font-thin">Talk.Heal.Grow</div>
+                  <div className="text-3xl font-nunito font-bold my-4">Welcome Back!</div>
                 </div>
               </div>
-              <Input placeholder="username" className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg" />               <ConnectWallet />
+              <Input placeholder="username" className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg" />  
+              <Button className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg" > Login </Button>
+              <p>New Here? Connect wallet to sign up 😊 </p>
+              <ConnectWallet />
             </div>
           </div>
         </div>
