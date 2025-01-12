@@ -206,6 +206,10 @@ export default function ProfilePage() {
                     <span className="text-muted-foreground">Total Calls</span>
                     <span className="font-medium">{expert.calls.length}</span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Flags</span>
+                    <span className="font-medium">{expert.flags}</span>
+                  </div>
                 </div>
               </div>
             )}
