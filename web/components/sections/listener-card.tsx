@@ -53,6 +53,9 @@ export default function ListenerCard({ listener }: ListenerCardProps) {
           credentials: listener.expertise,
           rating: listener.rating,
           calls: listener.calls.length,
+          expertAddress: listener.id,
+          voiceRate: listener.voiceRatePerMinute,
+          videoRate: listener.videoRatePerMinute,
         }}
       />
     </div>

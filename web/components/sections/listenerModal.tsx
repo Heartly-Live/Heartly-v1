@@ -10,7 +10,7 @@ import {
   DialogPortal,
 } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { Star } from "lucide-react";
+import { Phone, Star, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ListenerModalProps {
@@ -21,6 +21,9 @@ interface ListenerModalProps {
     credentials: string;
     rating: number;
     calls: number;
+    expertAddress: string;
+    voiceRate: number;
+    videoRate: number;
   } | null;
 }
 
@@ -78,6 +81,24 @@ export default function ListenerModal({
                     <div className="text-sm text-muted-foreground">
                       {listener.calls} calls
                     </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1">
+                    <Phone className="w-4 h-4 fill-primary text-primary" />
+                    <span className="text-sm font-medium">
+                      ${listener.voiceRate / 10 ** 6}/min
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Video className="w-4 h-4 fill-primary text-primary" />
+                    <span className="text-sm font-medium">
+                      ${listener.videoRate / 10 ** 6}/min
+                    </span>
                   </div>
                 </div>
               </CardContent>

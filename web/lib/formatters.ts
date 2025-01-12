@@ -18,8 +18,8 @@ export function formatDate(timestamp: number): string {
 }
 
 export function formatAmount(amount: string): string {
-  const amountInEth = parseInt(amount) / 1e18;
-  return `${amountInEth.toFixed(4)} ETH`;
+  const amountInEth = parseInt(amount) / 1e6;
+  return `${amountInEth.toFixed(4)} USDC`;
 }
 
 export function truncateAddress(address: string): string {
