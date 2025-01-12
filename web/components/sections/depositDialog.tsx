@@ -8,7 +8,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { walletClient } from "@/lib/client";
 
 import { approve, deposit } from "@/lib/contractHelpers/helper";
 import { useState } from "react";

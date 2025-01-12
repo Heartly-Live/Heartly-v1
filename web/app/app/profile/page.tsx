@@ -16,6 +16,7 @@ import { useAccount } from "wagmi";
 import { SUBGRAPH_URL, USDC_ADDRESS } from "@/lib/consts";
 import request, { gql } from "graphql-request";
 import { publicClient } from "@/lib/client";
+import { PinataSDK } from "pinata-web3";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
@@ -25,9 +26,13 @@ export default function ProfilePage() {
   const disconnectWallet = useDisconnectWallet();
   const [expert, setExpert] = useState<any>();
   const [balance, setBalance] = useState(0);
+  const [profile, setProfile] = useState<any>("");
 
   const { address } = useAccount();
-
+  const pinata = new PinataSDK({
+    pinataJwt: process.env.PINATA_JWT!,
+    pinataGateway: "orange-select-opossum-767.mypinata.cloud",
+  });
   const fetchUserProfile = async (address: string) => {
     try {
       const data: any = await request(
@@ -57,12 +62,17 @@ export default function ProfilePage() {
         `
       );
       console.log(data);
+      if (data.users.length > 0) {
+        setBalance(data.users[0].balance / 10 ** 6);
+      }
       if (data.experts.length > 0) {
         setIsListener(true);
         setExpert(data.experts[0]);
-      }
-      if (data.users.length > 0) {
-        setBalance(data.users[0].balance / 10 ** 6);
+        console.log(data.experts[0].cid);
+        const profileImage = await pinata.gateways.get(data.experts[0].cid);
+        console.log(profileImage);
+        const url = URL.createObjectURL(profileImage.data as any);
+        setProfile(url);
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -103,7 +113,7 @@ export default function ProfilePage() {
           <div className="relative">
             <Avatar className="w-32 h-32 border-4 border-white relative">
               <AvatarImage
-                src="/placeholder.svg"
+                src={isListener ? profile : ""}
                 alt={isListener ? expert.name : "Anonymous User"}
               />
               <AvatarFallback>
@@ -212,6 +222,7 @@ export default function ProfilePage() {
       <ListenerRegistrationDialog
         open={showListenerDialog}
         onOpenChange={setShowListenerDialog}
+        account={address}
       />
     </div>
   );

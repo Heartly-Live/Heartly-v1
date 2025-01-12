@@ -108,7 +108,7 @@ export const registerExpert = async (
   voiceRatePerMinute: number,
   videoRatePerMinute: number,
   cid: string,
-  account: any
+  account: `0x${string}`
 ) => {
   // get the rates in USDC , convert it to wei
   const voiceRatePerMinuteInWei = voiceRatePerMinute * 10 ** 6;

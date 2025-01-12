@@ -11,15 +11,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { PinataSDK } from "pinata-web3";
+import { registerExpert } from "@/lib/contractHelpers/helper";
 
 interface ListenerRegistrationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  account: any;
 }
 
 export function ListenerRegistrationDialog({
   open,
   onOpenChange,
+  account,
 }: ListenerRegistrationDialogProps) {
   const [formData, setFormData] = useState({
     name: "",
@@ -29,10 +33,35 @@ export function ListenerRegistrationDialog({
     image: null as File | null,
   });
 
-  const handleSubmit = () => {
+  const [IpfsHash, setIpfsHash] = useState("");
+  const handleSubmit = async () => {
     // Handle registration logic here
-    console.log("Submitting:", formData);
+    const cid = await uploadImage();
+    console.log(account);
+    await registerExpert(
+      formData.name,
+      formData.expertise,
+      parseFloat(formData.voiceRate),
+      parseFloat(formData.videoRate),
+      cid,
+      account
+    );
+    console.log("Submitting:", formData, cid);
     onOpenChange(false);
+  };
+
+  const uploadImage = async () => {
+    // Handle image upload logic here
+    // if (!formData.image) return;
+    const pinata = new PinataSDK({
+      pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
+      pinataGateway: "orange-select-opossum-767.mypinata.cloud",
+    });
+
+    const upload = await pinata.upload.file(formData.image!);
+    console.log(upload.IpfsHash);
+
+    return upload.IpfsHash;
   };
 
   return (
