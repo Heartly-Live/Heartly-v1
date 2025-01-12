@@ -8,19 +8,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { walletClient } from "@/lib/client";
+
+import { approve, deposit } from "@/lib/contractHelpers/helper";
 import { useState } from "react";
 
 interface DepositDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  account: any;
 }
 
-export function DepositDialog({ open, onOpenChange }: DepositDialogProps) {
+export function DepositDialog({
+  open,
+  onOpenChange,
+  account,
+}: DepositDialogProps) {
   const [amount, setAmount] = useState("");
 
-  const handleDeposit = () => {
+  const handleDeposit = async () => {
     // Handle deposit logic here
+
     console.log("Depositing:", amount);
+    console.log(account);
+    await approve(parseFloat(amount), account);
+    await deposit(parseFloat(amount), account);
     onOpenChange(false);
   };
 

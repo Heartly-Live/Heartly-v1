@@ -1,5 +1,5 @@
 import { publicClient, walletClient } from "../client";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../consts";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, USDC_ADDRESS } from "../consts";
 
 // Account is a account object from wagmi or viem. get it using useAccount() hook
 export const cancelCall = async (callId: string, account: any) => {
@@ -16,10 +16,10 @@ export const cancelCall = async (callId: string, account: any) => {
 };
 
 // Before Depositing USDC , you need to approve the contract to spend the USDC
-export const approve = async (amount: number, account: any) => {
+export const approve = async (amount: number, account: `0x${string}`) => {
   const amountInWei = amount * 10 ** 6;
   const tx = await walletClient.writeContract({
-    address: "0x", // replace with the address of the USDC contract in base Sepolia testnet
+    address: USDC_ADDRESS, // replace with the address of the USDC contract in base Sepolia testnet
     abi: [
       {
         inputs: [
@@ -33,23 +33,24 @@ export const approve = async (amount: number, account: any) => {
       },
     ],
     functionName: "approve",
-    args: ["0x", BigInt(amountInWei)],
+    args: [CONTRACT_ADDRESS, BigInt(amountInWei)],
     account,
   });
   console.log(tx);
 };
 
 // To Deposit USDC to the contract by user
-export const deposit = async (amount: number, account: any) => {
+export const deposit = async (amount: number, account: `0x${string}`) => {
   // If the amount is in USDC , we need to convert it to wei
   const amountInWei = amount * 10 ** 6;
+  console.log(account);
 
   const tx = await walletClient.writeContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "deposit",
     args: [BigInt(amountInWei)],
-    account,
+    account: account,
   });
 
   console.log(tx);

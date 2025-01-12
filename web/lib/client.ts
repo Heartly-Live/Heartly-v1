@@ -1,4 +1,4 @@
-import { createPublicClient, createWalletClient, http } from "viem";
+import { createPublicClient, createWalletClient, custom, http } from "viem";
 import { baseSepolia } from "viem/chains";
 
 // Change the chain , whenerver required
@@ -6,7 +6,7 @@ import { baseSepolia } from "viem/chains";
 // use this for write operations
 export const walletClient = createWalletClient({
   chain: baseSepolia,
-  transport: http(),
+  transport: custom(window.ethereum),
 });
 
 // use this for read operations

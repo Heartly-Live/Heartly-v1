@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/connectButton";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
-import { SUBGRAPH_URL } from "@/lib/consts";
+import { SUBGRAPH_URL, USDC_ADDRESS } from "@/lib/consts";
 import request, { gql } from "graphql-request";
+import { publicClient } from "@/lib/client";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
@@ -23,20 +24,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const disconnectWallet = useDisconnectWallet();
   const [expert, setExpert] = useState<any>();
-
-  const userProfile = {
-    name: "Sarah Wilson",
-    balance: 50.0,
-    listenerProfile: isListener
-      ? {
-          expertise: "Clinical Psychology",
-          voiceRate: 2.5,
-          videoRate: 5.0,
-          rating: 4.8,
-          totalCalls: 128,
-        }
-      : null,
-  };
+  const [balance, setBalance] = useState(0);
 
   const { address } = useAccount();
 
@@ -61,6 +49,10 @@ export default function ProfilePage() {
                 id
               }
             }
+            users(where: { id: "${address.toLowerCase()}" }) {
+              balance
+              id
+            }
           }
         `
       );
@@ -68,6 +60,9 @@ export default function ProfilePage() {
       if (data.experts.length > 0) {
         setIsListener(true);
         setExpert(data.experts[0]);
+      }
+      if (data.users.length > 0) {
+        setBalance(data.users[0].balance / 10 ** 6);
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -85,6 +80,21 @@ export default function ProfilePage() {
     router.push("/app"); // Navigate back to the previous screen
   };
 
+  if (!address) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
+        <div className="max-w-md mx-auto p-4 pb-16">
+          <div className="flex flex-col items-center gap-4 mb-8">
+            <h1 className="text-2xl font-bold">Connect Wallet</h1>
+            <div className="flex items-center gap-2">
+              <ConnectWallet />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
       <div className="max-w-md mx-auto p-4 pb-16">
@@ -92,7 +102,10 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center gap-4 mb-8">
           <div className="relative">
             <Avatar className="w-32 h-32 border-4 border-white relative">
-              <AvatarImage src="/placeholder.svg" alt={userProfile.name} />
+              <AvatarImage
+                src="/placeholder.svg"
+                alt={isListener ? expert.name : "Anonymous User"}
+              />
               <AvatarFallback>
                 {" "}
                 {isListener ? expert.name : "Anonymous"}
@@ -115,7 +128,7 @@ export default function ProfilePage() {
               <div>
                 <h2 className="text-lg font-semibold">Balance</h2>
                 <p className="text-3xl font-bold text-primary">
-                  ${userProfile.balance.toFixed(2)}
+                  ${balance.toFixed(2)}
                 </p>
               </div>
               <Wallet className="w-10 h-10 text-muted-foreground" />
@@ -193,6 +206,7 @@ export default function ProfilePage() {
       <DepositDialog
         open={showDepositDialog}
         onOpenChange={setShowDepositDialog}
+        account={address}
       />
 
       <ListenerRegistrationDialog
