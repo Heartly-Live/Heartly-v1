@@ -7,8 +7,14 @@ import { useEffect, useState } from "react";
 import { DepositDialog } from "@/components/sections/depositDialog";
 import { ListenerRegistrationDialog } from "@/components/sections/listenerRegistration";
 import { Wallet } from "lucide-react";
-import { ConnectWallet, useDisconnectWallet } from "@/components/ui/connectButton";
+import {
+  ConnectWallet,
+  useDisconnectWallet,
+} from "@/components/ui/connectButton";
 import { useRouter } from "next/navigation";
+import { useAccount } from "wagmi";
+import { SUBGRAPH_URL } from "@/lib/consts";
+import request, { gql } from "graphql-request";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
@@ -16,6 +22,7 @@ export default function ProfilePage() {
   const [isListener, setIsListener] = useState(false); // This would come from your auth state
   const router = useRouter();
   const disconnectWallet = useDisconnectWallet();
+  const [expert, setExpert] = useState<any>();
 
   const userProfile = {
     name: "Sarah Wilson",
@@ -31,15 +38,52 @@ export default function ProfilePage() {
       : null,
   };
 
+  const { address } = useAccount();
+
+  const fetchUserProfile = async (address: string) => {
+    try {
+      const data: any = await request(
+        SUBGRAPH_URL,
+        gql`
+          query MyQuery {
+            experts(where: { id: "${address.toLowerCase()}" }) {
+              balance
+              cid
+              expertise
+              flags
+              id
+              isRegistered
+              name
+              rating
+              voiceRatePerMinute
+              videoRatePerMinute
+              calls {
+                id
+              }
+            }
+          }
+        `
+      );
+      console.log(data);
+      if (data.experts.length > 0) {
+        setIsListener(true);
+        setExpert(data.experts[0]);
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  };
+
   useEffect(() => {
-    setIsListener(false);
-  }, []);
+    if (address) {
+      fetchUserProfile(address);
+    }
+  }, [address]);
 
   const handleLogout = () => {
     disconnectWallet(); // Disconnect the wallet
     router.push("/app"); // Navigate back to the previous screen
   };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
@@ -47,14 +91,21 @@ export default function ProfilePage() {
         {/* Profile Header */}
         <div className="flex flex-col items-center gap-4 mb-8">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full blur-xl opacity-50" />
             <Avatar className="w-32 h-32 border-4 border-white relative">
               <AvatarImage src="/placeholder.svg" alt={userProfile.name} />
-              <AvatarFallback>SW</AvatarFallback>
+              <AvatarFallback>
+                {" "}
+                {isListener ? expert.name : "Anonymous"}
+              </AvatarFallback>
             </Avatar>
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full blur-xl opacity-50" />
           </div>
-          <h1 className="text-2xl font-bold">{userProfile.name}</h1>
-          <ConnectWallet />
+          <h1 className="text-2xl font-bold">
+            {isListener ? expert.name : "Anonymous User"}
+          </h1>
+          <div className="flex items-center gap-2">
+            <ConnectWallet />
+          </div>
         </div>
 
         {/* Balance Section */}
@@ -104,40 +155,33 @@ export default function ProfilePage() {
                   Logout
                 </Button>
               </div>
-              
             ) : (
               <div>
                 <h2 className="text-lg font-semibold mb-4">Listener Profile</h2>
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Expertise</span>
-                    <span className="font-medium">
-                      {userProfile.listenerProfile?.expertise}
-                    </span>
+                    <span className="font-medium">{expert.expertise}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Voice Rate</span>
                     <span className="font-medium">
-                      ${userProfile.listenerProfile?.voiceRate}/min
+                      ${expert.voiceRatePerMinute / 10 ** 6}/min
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Video Rate</span>
                     <span className="font-medium">
-                      ${userProfile.listenerProfile?.videoRate}/min
+                      ${expert.videoRatePerMinute / 10 ** 6}/min
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Rating</span>
-                    <span className="font-medium">
-                      ⭐️ {userProfile.listenerProfile?.rating}
-                    </span>
+                    <span className="font-medium">⭐️ {expert.rating}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Calls</span>
-                    <span className="font-medium">
-                      {userProfile.listenerProfile?.totalCalls}
-                    </span>
+                    <span className="font-medium">{expert.calls.length}</span>
                   </div>
                 </div>
               </div>

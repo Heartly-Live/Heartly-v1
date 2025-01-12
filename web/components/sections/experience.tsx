@@ -18,7 +18,7 @@ function ExperienceCard({
   return (
     <div className="flex flex-col gap-4 sm:gap-6 md:gap-8">
       <div className=" rounded-lg overflow-hidden  flex flex-col justify-center items-center gap-4">
-        <Image src={ExperienceImage} alt={title} className="" />
+        <Image src={ExperienceImage} alt={title} className="w-full h-full" />
       </div>
       <h3 className="font-medium text-lg sm:text-xl md:text-2xl text-center">
         {title}
@@ -46,7 +46,7 @@ export function Experience() {
           <ExperienceCard
             ExperienceImage={ExperienceImage}
             title="Web3-Based Privacy"
-            description="Harnessing blockchain&apos;s transparency and immutability to ensure user data is encrypted and never accessible to third parties."
+            description="Harnessing blockchain's transparency and immutability to ensure user data is encrypted and never accessible to third parties."
           />
           <ExperienceCard
             ExperienceImage={ExperienceImage2}

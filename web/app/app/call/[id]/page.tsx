@@ -8,7 +8,6 @@ import Image from "next/image";
 import FeedbackDialog from "@/components/sections/feedbackDialog";
 
 export default function CallPage() {
-  
   //   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
   const [time, setTime] = useState(0);
@@ -51,7 +50,6 @@ export default function CallPage() {
   };
 
   return (
-    
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-orange-300 to-pink-300">
       {/* Ripple circles */}
       <div className="absolute inset-0 flex items-center justify-center">
@@ -93,7 +91,7 @@ export default function CallPage() {
                 src="https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt="Patient Listener"
                 fill
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
 
