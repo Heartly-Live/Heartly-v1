@@ -5,18 +5,10 @@ import ListenerModal from "./listenerModal";
 import { useState } from "react";
 
 interface ListenerCardProps {
-  name: string;
-  credentials: string;
-  rating: number;
-  calls: number;
+  listener: any;
 }
 
-export default function ListenerCard({
-  name,
-  credentials,
-  rating,
-  calls,
-}: ListenerCardProps) {
+export default function ListenerCard({ listener }: ListenerCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div>
@@ -30,21 +22,25 @@ export default function ListenerCard({
         <CardContent className="p-4">
           <div className="flex items-center gap-4">
             <Avatar className="w-12 h-12">
-              <AvatarImage src="/placeholder.svg" alt={name} />
+              <AvatarImage src="/placeholder.svg" alt={listener.name} />
               <AvatarFallback>PL</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1">
-                  <h3 className="font-medium">{name}</h3>
+                  <h3 className="font-medium">{listener.name}</h3>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-primary text-primary" />
-                  <span className="text-sm font-medium">{rating}</span>
+                  <span className="text-sm font-medium">{listener.rating}</span>
                 </div>
               </div>
-              <div className="text-sm text-muted-foreground">{credentials}</div>
-              <div className="text-sm text-muted-foreground">{calls} calls</div>
+              <div className="text-sm text-muted-foreground">
+                {listener.expertise}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {listener.calls.length} calls
+              </div>
             </div>
           </div>
         </CardContent>
@@ -52,7 +48,12 @@ export default function ListenerCard({
       <ListenerModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        listener={{ name, credentials, rating, calls }}
+        listener={{
+          name: listener.name,
+          credentials: listener.expertise,
+          rating: listener.rating,
+          calls: listener.calls.length,
+        }}
       />
     </div>
   );

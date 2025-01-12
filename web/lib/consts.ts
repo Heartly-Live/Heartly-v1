@@ -1,3 +1,5 @@
+export const SUBGRAPH_URL =
+  "https://api.studio.thegraph.com/query/73364/heartly-base-sepolia/version/latest";
 export const CONTRACT_ADDRESS = "0x3D8B5AAC5723769ba3FF7888944540158a1B1E08";
 export const CONTRACT_ABI = [
   {

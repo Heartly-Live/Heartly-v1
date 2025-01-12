@@ -2,39 +2,70 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Logo from "@/assets/Logo.png";
-import { ConnectWallet, useDisconnectWallet } from "@/components/ui/connectButton"; // Import disconnect function
+import {
+  ConnectWallet,
+  useDisconnectWallet,
+} from "@/components/ui/connectButton"; // Import disconnect function
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import ListenerCard from "@/components/sections/listener-card";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { gql, request } from "graphql-request";
+import { SUBGRAPH_URL } from "@/lib/consts";
 
 const Page = () => {
   const { address } = useAccount();
-  const [hasMounted, setHasMounted] = useState(false);
   const router = useRouter();
   const disconnectWallet = useDisconnectWallet(); // Use the custom hook
-
+  const [listeners, setListeners] = useState<any>([]);
 
   const handleLogout = () => {
     disconnectWallet(); // Disconnect the wallet
     router.push("/app"); // Navigate back to the previous screen
   };
 
+  const fetchListeners = async () => {
+    try {
+      const data: any = await request(
+        SUBGRAPH_URL,
+        gql`
+          query MyQuery {
+            experts {
+              balance
+              cid
+              expertise
+              flags
+              id
+              isRegistered
+              name
+              rating
+              voiceRatePerMinute
+              videoRatePerMinute
+              calls {
+                id
+              }
+            }
+          }
+        `
+      );
+      console.log(data.experts);
+      setListeners(data.experts);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    setHasMounted(true);
+    fetchListeners();
   }, []);
 
-  const listeners = Array(8).fill({
-    name: "Patient Listener",
-    credentials: "M.A Clinical Psychology",
-    rating: 3.2,
-    calls: 23,
-  });
-
-  // Only render the component after it has mounted on the client
-  if (!hasMounted && !address) {
-    return null; // Or a loading spinner
+  if (!address) {
+    return (
+      <div className="flex flex-col justify-center items-center gap-4 h-screen">
+        {/* Existing login/connect wallet content */}
+      </div>
+    );
   }
 
   return (
@@ -48,11 +79,19 @@ const Page = () => {
                 <div className="flex flex-col justify-center items-center">
                   <div className="text-3xl font-nunito font-bold">HEARTLY</div>
                   <div className="text-xs font-thin">Talk.Heal.Grow</div>
-                  <div className="text-3xl font-nunito font-bold my-4">Welcome Back!</div>
+                  <div className="text-3xl font-nunito font-bold my-4">
+                    Welcome Back!
+                  </div>
                 </div>
               </div>
-              <Input placeholder="username" className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg" />  
-              <Button className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg" > Login </Button>
+              <Input
+                placeholder="username"
+                className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg"
+              />
+              <Button className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg">
+                {" "}
+                Login{" "}
+              </Button>
               <p>New Here? Connect wallet to sign up 😊 </p>
               <ConnectWallet />
             </div>
@@ -75,23 +114,34 @@ const Page = () => {
                 </div>
               </div>
               <Button
-            variant="secondary"
-            size="lg"
-            className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
+                variant="secondary"
+                size="lg"
+                className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
             </div>
           </section>
+          {/* Main Content */}
+          {listeners.length === 0 && (
+            <div className="flex flex-col justify-center items-center gap-4">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <div className="flex flex-col justify-center items-center">
+                  <div className="text-3xl font-nunito font-bold">
+                    No Listeners Found
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <main className="px-4 space-y-4 w-full">
-            {listeners.map((listener, i) => (
-              <ListenerCard key={i} {...listener} />
+            {listeners.map((listener: any, i: any) => (
+              <ListenerCard key={i} listener={listener} />
             ))}
 
             {/* Pagination */}
           </main>
-          
         </div>
       )}
     </div>
