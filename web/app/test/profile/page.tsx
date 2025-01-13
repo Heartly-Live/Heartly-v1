@@ -16,7 +16,7 @@ import { useAccount } from "wagmi";
 import { SUBGRAPH_URL, USDC_ADDRESS } from "@/lib/consts";
 import request, { gql } from "graphql-request";
 import { publicClient } from "@/lib/client";
-import { PinataSDK } from "pinata-web3";
+import { pinata } from "@/lib/pinata";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
@@ -29,10 +29,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<any>("");
 
   const { address } = useAccount();
-  const pinata = new PinataSDK({
-    pinataJwt: process.env.PINATA_JWT!,
-    pinataGateway: "orange-select-opossum-767.mypinata.cloud",
-  });
+
   const fetchUserProfile = async (address: string) => {
     try {
       const data: any = await request(
