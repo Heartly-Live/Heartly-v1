@@ -80,7 +80,7 @@ export function Hero() {
         <p className="text-lg mb-8 font-normal">
           Talk about anything & everything, anonymously.
         </p>
-        {/* <Link href="/app">
+        {/* <Link href="/test">
           <Button
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"
@@ -90,7 +90,7 @@ export function Hero() {
         </Link> */}
         <Link href="https://tripetto.app/run/X6PZRUDEGB">
           {" "}
-          {/* // Changed from "/app" to "/coming-soon" */}
+          {/* // Changed from "/test" to "/coming-soon" */}
           <Button
             size="lg"
             className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white py-2 px-4 rounded hover:bg-gradient-to-r hover:from-[#FFA2C9] hover:to-[#FEBF5D] hover:transition-colors duration-300 font-nunito text-lg"

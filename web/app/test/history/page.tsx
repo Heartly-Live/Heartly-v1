@@ -65,7 +65,7 @@ export default function HistoryPage() {
 
   const handleLogout = () => {
     disconnectWallet(); // Disconnect the wallet
-    router.push("/app"); // Navigate back to the previous screen
+    router.push("/test"); // Navigate back to the previous screen
   };
 
   const callHistory = async (address: string) => {
