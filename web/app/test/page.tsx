@@ -60,13 +60,13 @@ const Page = () => {
     fetchListeners();
   }, []);
 
-  if (!address) {
-    return (
-      <div className="flex flex-col justify-center items-center gap-4 h-screen">
-        {/* Existing login/connect wallet content */}
-      </div>
-    );
-  }
+  // if (!address) {
+  //   return (
+  //     <div className="flex flex-col justify-center items-center gap-4 h-screen">
+  //       {/* Existing login/connect wallet content */}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
