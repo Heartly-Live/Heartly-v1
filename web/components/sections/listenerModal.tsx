@@ -38,7 +38,7 @@ export default function ListenerModal({
 
   const handleBeginClick = () => {
     onClose();
-    router.push("/app/call/0");
+    router.push("/test/call/0");
   };
 
   return (
