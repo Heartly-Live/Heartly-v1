@@ -21,9 +21,9 @@ const authenticationAdapter = createAuthenticationAdapter({
 
   createMessage: ({ nonce, address, chainId }) => {
     return createSiweMessage({
-      domain: window.location.host,
+      domain: "heartly.live",
       address,
-      uri: window.location.origin,
+      uri: "/api",
       version: "1",
       chainId,
       nonce,
