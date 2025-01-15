@@ -23,7 +23,6 @@ export default function FeedbackDialog({
     // Here you would typically send the feedback to your backend
     console.log({ rating, feedback });
     onClose();
-    router.push("/");
   };
 
   return (

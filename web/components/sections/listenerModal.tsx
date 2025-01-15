@@ -24,6 +24,8 @@ interface ListenerModalProps {
     expertAddress: string;
     voiceRate: number;
     videoRate: number;
+    flags: number;
+    time: number;
   } | null;
 }
 
@@ -85,39 +87,22 @@ export default function ListenerModal({
                 </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1">
-                    <Phone className="w-4 h-4 fill-primary text-primary" />
-                    <span className="text-sm font-medium">
-                      ${listener.voiceRate / 10 ** 6}/min
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Video className="w-4 h-4 fill-primary text-primary" />
-                    <span className="text-sm font-medium">
-                      ${listener.videoRate / 10 ** 6}/min
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+ 
+              <div className="flex flex-row items-center gap-4">
+                <Button className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors">
+                  <Phone className="w-4 h-4 fill-black text-black" />
+                  <span className="text-sm text-black font-medium">
+                    ${listener.voiceRate / 10 ** 6}/min
+                  </span>
+                </Button>
 
-            <div className="flex flex-col items-center gap-4 w-full pt-2">
-              <Button
-                className="w-full h-12 text-lg font-medium bg-gradient-to-r from-orange-300 to-pink-300 hover:opacity-90 transition-opacity rounded-full"
-                onClick={handleBeginClick}
-              >
-                Begin
-              </Button>
-              <button
-                onClick={onClose}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-              >
-                Explore More <span aria-hidden="true">→</span>
-              </button>
-            </div>
+                <Button className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors">
+                  <Video className="w-4 h-4 fill-black text-black" />
+                  <span className="text-sm text-black font-medium">
+                    ${listener.videoRate / 10 ** 6}/min
+                  </span>
+                </Button>
+              </div>
           </div>
         </DialogContent>
       </DialogPortal>

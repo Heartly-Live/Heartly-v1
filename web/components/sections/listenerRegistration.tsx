@@ -30,6 +30,8 @@ export function ListenerRegistrationDialog({
     expertise: "",
     voiceRate: "",
     videoRate: "",
+    timepledged: "",
+    languages: "",
     image: null as File | null,
   });
 
@@ -132,6 +134,19 @@ export function ListenerRegistrationDialog({
                 placeholder="e.g., Clinical Psychology"
               />
             </div>
+            <div className="space-y-2">
+              <Label>Languages known</Label>
+              <Input
+                value={formData.languages}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    expertise: e.target.value,
+                  }))
+                }
+                placeholder="e.g., English, Hindi"
+              />
+            </div>
 
             <div className="space-y-2">
               <Label>Voice Call Rate (per minute)</Label>
@@ -162,6 +177,22 @@ export function ListenerRegistrationDialog({
                   }))
                 }
                 placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Time Pledged (hrs per week)</Label>
+              <Input
+                type="number"
+                value={formData.timepledged}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    videoRate: e.target.value,
+                  }))
+                }
+                placeholder="0 hrs"
                 min="0"
                 step="0.01"
               />

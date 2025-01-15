@@ -84,15 +84,11 @@ const Page = () => {
                   </div>
                 </div>
               </div>
+              <p>Continue with a wallet 😊 </p>
               <Input
                 placeholder="username"
                 className="flex h-12 w-full rounded-lg border border-input bg-white px-4 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-lg"
               />
-              <Button className="bg-gradient-to-r from-[#FEBF5D] to-[#FFA2C9] text-white px-6 py-2 rounded-lg">
-                {" "}
-                Login{" "}
-              </Button>
-              <p>New Here? Connect wallet to sign up 😊 </p>
               <ConnectWallet />
             </div>
           </div>
@@ -105,7 +101,7 @@ const Page = () => {
                 <Image src={Logo} alt="Logo" className="w-12 h-12" />
                 <div className="flex flex-col items-start">
                   <div className="text-2xl font-nunito font-bold">
-                    {`Let&apos;s Talk`}
+                    {`Let's Talk`}
                   </div>
                   <div className="text-xs font-thin flex justify-center items-center gap-2">
                     <div>243 listeners online</div>
@@ -113,14 +109,53 @@ const Page = () => {
                   </div>
                 </div>
               </div>
-              <Button
-                variant="secondary"
-                size="lg"
-                className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
+              <div className="flex items-center gap-2">
+                <select
+                  className="mt-4 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
+                  onChange={(e) => {
+                    // Add expertise filter logic
+                  }}
+                >
+                  <option value="">Expertise</option>
+                  <option value="relationships">Relationships</option>
+                  <option value="anxiety">Anxiety</option>
+                  <option value="depression">Depression</option>
+                  <option value="stress">Stress</option>
+                </select>
+
+                <select
+                  className="mt-4 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
+                  onChange={(e) => {
+                    // Add language filter logic
+                  }}
+                >
+                  <option value="">Languages</option>
+                  <option value="english">English</option>
+                  <option value="spanish">Spanish</option>
+                  <option value="french">French</option>
+                </select>
+
+                <select
+                  className="mt-4 px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
+                  onChange={(e) => {
+                    // Add rating filter logic
+                  }}
+                >
+                  <option value="">Rating</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4+ Stars</option>
+                  <option value="3">3+ Stars</option>
+                </select>
+
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="mt-4 bg-red-500 text-white font-bold hover:bg-red-600 transition-colors"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
             </div>
           </section>
           {/* Main Content */}
@@ -139,8 +174,6 @@ const Page = () => {
             {listeners.map((listener: any, i: any) => (
               <ListenerCard key={i} listener={listener} />
             ))}
-
-            {/* Pagination */}
           </main>
         </div>
       )}

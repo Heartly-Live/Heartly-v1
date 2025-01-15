@@ -6,12 +6,14 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import FeedbackDialog from "@/components/sections/feedbackDialog";
+import PaymentDialog from "@/components/sections/paymentDialog";
 
 export default function CallPage() {
   //   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
   const [time, setTime] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,6 +49,10 @@ export default function CallPage() {
     } else {
       console.log("Disconnected");
     }
+  };
+  const handleFeedbackComplete = () => {
+    setShowFeedback(false);
+    setShowPayment(true);
   };
 
   return (
@@ -107,6 +113,28 @@ export default function CallPage() {
             <div className="bg-white/90 backdrop-blur-sm px-6 py-2 rounded-full">
               <span className="text-xl font-medium">{formatTime(time)}</span>
             </div>
+            <div className="flex gap-4">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="max-w-xs bg-white text-red-500 font-bold hover:text-red-600 transition-colors font-montserrat text-lg"
+                onClick={() => handleDisconnected()}
+              >
+                Disconnect
+              </Button>
+
+              <Button
+                variant="secondary"
+                size="lg"
+                className="max-w-xs bg-white text-yellow-500 font-bold hover:text-yellow-600 transition-colors font-montserrat text-lg"
+                onClick={() => {
+                  handleDisconnected();
+                  // Add flag handling logic here
+                }}
+              >
+                Flag Call
+              </Button>
+            </div>
           </motion.div>
         ) : (
           <motion.h1
@@ -124,18 +152,15 @@ export default function CallPage() {
             </motion.span>
           </motion.h1>
         )}
-
-        <Button
-          variant="secondary"
-          size="lg"
-          className=" max-w-xs bg-white text-red-500 font-bold hover:text-red-600 transition-colors font-montserrat text-lg"
-          onClick={() => handleDisconnected()}
-        >
-          Disconnect
-        </Button>
         <FeedbackDialog
           isOpen={showFeedback}
-          onClose={() => setShowFeedback(false)}
+          onClose={handleFeedbackComplete}
+        />
+        <PaymentDialog
+          isOpen={showPayment}
+          onClose={() => setShowPayment(false)}
+          duration={time}
+          rate={10} // Set your rate here
         />
       </div>
     </div>

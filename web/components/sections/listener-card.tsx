@@ -41,6 +41,12 @@ export default function ListenerCard({ listener }: ListenerCardProps) {
               <div className="text-sm text-muted-foreground">
                 {listener.calls.length} calls
               </div>
+              <div className="text-sm text-muted-foreground">
+              {listener.time} average call time
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {listener.flags} flags
+              </div>
             </div>
           </div>
         </CardContent>
@@ -56,6 +62,8 @@ export default function ListenerCard({ listener }: ListenerCardProps) {
           expertAddress: listener.id,
           voiceRate: listener.voiceRatePerMinute,
           videoRate: listener.videoRatePerMinute,
+          flags: listener.flags,
+          time: listener.time,
         }}
       />
     </div>
