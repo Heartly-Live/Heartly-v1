@@ -56,12 +56,11 @@ export function Hero() {
             <NavItem href="#why">Why</NavItem>
             <NavItem href="#what">How</NavItem>
           </div>
-
           <div>
-            <div className="absolute top-8 right-8">
+            <div className="absolute top-2 right-2 md:top-8 md:right-8">
               <NavItem
                 href="https://tripetto.app/run/X6PZRUDEGB"
-                className="bg-[#FFA2C9] text-white px-6 py-3 rounded-full font-medium"
+                className="whitespace-nowrap absolute top-4 right-4 bg-[#FFA2C9] text-white px-3 py-2 text-sm md:px-6 md:py-3 md:text-base rounded-full font-medium hover:opacity-90 transition-opacity"
               >
                 Become a listener
               </NavItem>
