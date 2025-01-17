@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import { useAccount } from "wagmi";
 
 const items = [
   {
@@ -32,7 +33,9 @@ const items = [
 
 export default function BottomNavbar() {
   const mouseX = useMotionValue(Infinity);
+  const { address } = useAccount();
 
+  if (!address) return null;
   return (
     <motion.nav
       onMouseMove={(e) => mouseX.set(e.pageX)}

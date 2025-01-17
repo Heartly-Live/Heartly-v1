@@ -17,6 +17,7 @@ import { SUBGRAPH_URL, USDC_ADDRESS } from "@/lib/consts";
 import request, { gql } from "graphql-request";
 import { publicClient } from "@/lib/client";
 import { pinata } from "@/lib/pinata";
+import { searchUserByAddress } from "@/helpers/auth";
 
 export default function ProfilePage() {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
@@ -27,8 +28,8 @@ export default function ProfilePage() {
   const [expert, setExpert] = useState<any>();
   const [balance, setBalance] = useState(0);
   const [profile, setProfile] = useState<any>("");
-
-  const { address } = useAccount();
+  const [user, setUser] = useState([]);
+  const { address, isReconnecting } = useAccount();
 
   const fetchUserProfile = async (address: string) => {
     try {
@@ -79,6 +80,18 @@ export default function ProfilePage() {
   useEffect(() => {
     if (address) {
       fetchUserProfile(address);
+      const fetchProfileData = async () => {
+        const user = await searchUserByAddress(address);
+        if (!user || user.error) {
+          console.log("No user found");
+          setUser([]);
+          return;
+        }
+        console.log(user);
+
+        setUser(user.data);
+      };
+      void fetchProfileData();
     }
   }, [address]);
 
@@ -87,7 +100,7 @@ export default function ProfilePage() {
     router.push("/test"); // Navigate back to the previous screen
   };
 
-  if (!address) {
+  if (!address && !isReconnecting) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-md mx-auto p-4 pb-16">
