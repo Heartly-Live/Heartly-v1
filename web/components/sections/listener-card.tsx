@@ -15,7 +15,6 @@ export default function ListenerCard({ listener }: ListenerCardProps) {
       <Card
         className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => {
-          console.log("object");
           setIsModalOpen(true);
         }}
       >

@@ -7,36 +7,62 @@ import { useEffect, useState } from "react";
 import { DepositDialog } from "@/components/sections/depositDialog";
 import { ListenerRegistrationDialog } from "@/components/sections/listenerRegistration";
 import { Wallet } from "lucide-react";
-import {
-  ConnectWallet,
-  useDisconnectWallet,
-} from "@/components/ui/connectButton";
+import { ConnectWallet } from "@/components/ui/connectButton";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
-import { SUBGRAPH_URL, USDC_ADDRESS } from "@/lib/consts";
+import { useAccount, useDisconnect } from "wagmi";
+import { SUBGRAPH_URL } from "@/lib/consts";
 import request, { gql } from "graphql-request";
-import { publicClient } from "@/lib/client";
 import { pinata } from "@/lib/pinata";
+import { refreshToken } from "@/helpers/auth";
+import useAuthStatus from "@/hooks/useAuthStatus";
+import Link from "next/link";
+import dynamic from "next/dynamic";
 
-export default function ProfilePage() {
+interface FetchedUser {
+  username: string;
+  walletAddress: string;
+  voicecallRate: string;
+  videoCallRate: string;
+  languages: string[];
+  role: string;
+}
+
+// Create a client-only wrapper component
+const ClientOnly = ({ children }: { children: React.ReactNode }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
+// Create the main profile content component
+const ProfileContent = () => {
   const [showDepositDialog, setShowDepositDialog] = useState(false);
   const [showListenerDialog, setShowListenerDialog] = useState(false);
-  const [isListener, setIsListener] = useState(false); // This would come from your auth state
+  const [isListener, setIsListener] = useState(false);
   const router = useRouter();
-  const disconnectWallet = useDisconnectWallet();
-  const [expert, setExpert] = useState<any>();
+  const [expert, setExpert] = useState<any>(null);
   const [balance, setBalance] = useState(0);
-  const [profile, setProfile] = useState<any>("");
+  const [profile, setProfile] = useState<string>("");
+  const [user, setUser] = useState<FetchedUser | null>(null);
+  const { address, isReconnecting, isConnecting } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { authStatus } = useAuthStatus();
 
-  const { address } = useAccount();
-
-  const fetchUserProfile = async (address: string) => {
+  const fetchUserProfile = async (userAddress: string) => {
     try {
       const data: any = await request(
         SUBGRAPH_URL,
         gql`
           query MyQuery {
-            experts(where: { id: "${address.toLowerCase()}" }) {
+            experts(where: { id: "${userAddress.toLowerCase()}" }) {
               balance
               cid
               expertise
@@ -51,25 +77,29 @@ export default function ProfilePage() {
                 id
               }
             }
-            users(where: { id: "${address.toLowerCase()}" }) {
+            users(where: { id: "${userAddress.toLowerCase()}" }) {
               balance
               id
             }
           }
         `
       );
-      console.log(data);
+
       if (data.users.length > 0) {
         setBalance(data.users[0].balance / 10 ** 6);
       }
       if (data.experts.length > 0) {
         setIsListener(true);
         setExpert(data.experts[0]);
-        console.log(data.experts[0].cid);
-        const profileImage = await pinata.gateways.get(data.experts[0].cid);
-        console.log(profileImage);
-        const url = URL.createObjectURL(profileImage.data as any);
-        setProfile(url);
+        if (data.experts[0].cid) {
+          try {
+            const profileImage = await pinata.gateways.get(data.experts[0].cid);
+            const url = URL.createObjectURL(profileImage.data as Blob);
+            setProfile(url);
+          } catch (error) {
+            console.error("Error fetching profile image:", error);
+          }
+        }
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
@@ -79,22 +109,74 @@ export default function ProfilePage() {
   useEffect(() => {
     if (address) {
       fetchUserProfile(address);
+
+      const fetchProfileData = async () => {
+        const token = localStorage.getItem("token");
+
+        try {
+          const response = await fetch(
+            `https://heartly.live/api/users/wallet/${address}`,
+            {
+              method: "GET",
+              cache: "no-store",
+              headers: {
+                authorization: `${token}`,
+              },
+            }
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            setUser(data);
+          }
+
+          if (data.error === "Invalid Token") {
+            refreshToken(address);
+            fetchProfileData();
+          }
+          if (data.error === "No user found") {
+            setUser(null);
+          }
+        } catch (error) {
+          console.error("Username check error:", error);
+        }
+      };
+
+      void fetchProfileData();
     }
   }, [address]);
 
   const handleLogout = () => {
-    disconnectWallet(); // Disconnect the wallet
-    router.push("/test"); // Navigate back to the previous screen
+    if (disconnect) {
+      disconnect();
+      router.push("/test");
+    }
   };
 
-  if (!address) {
+  if (isConnecting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
+        <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!address && !isReconnecting && !isConnecting) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-md mx-auto p-4 pb-16">
           <div className="flex flex-col items-center gap-4 mb-8">
-            <h1 className="text-2xl font-bold">Connect Wallet</h1>
+            <h1 className="text-2xl font-bold">You are not logged in</h1>
             <div className="flex items-center gap-2">
-              <ConnectWallet />
+              <Link
+                href="/test"
+                className="bg-gradient-to-r from-[#FBB03B] to-[#FBB4D5] text-white px-3 py-1 rounded-md text-sm font-nunito"
+              >
+                Go back
+              </Link>
             </div>
           </div>
         </div>
@@ -105,30 +187,27 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
       <div className="max-w-md mx-auto p-4 pb-16">
-        {/* Profile Header */}
         <div className="flex flex-col items-center gap-4 mb-8">
           <div className="relative">
             <Avatar className="w-32 h-32 border-4 border-white relative">
               <AvatarImage
                 src={isListener ? profile : ""}
-                alt={isListener ? expert.name : "Anonymous User"}
+                alt={isListener ? expert?.name : "Anonymous User"}
               />
               <AvatarFallback>
-                {" "}
-                {isListener ? expert.name : "Anonymous"}
+                {isListener ? expert?.name : "Anonymous"}
               </AvatarFallback>
             </Avatar>
             <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full blur-xl opacity-50" />
           </div>
           <h1 className="text-2xl font-bold">
-            {isListener ? expert.name : "Anonymous User"}
+            {isListener ? expert?.name : user?.username ?? "Anonymous User"}
           </h1>
           <div className="flex items-center gap-2">
             <ConnectWallet />
           </div>
         </div>
 
-        {/* Balance Section */}
         <Card className="mb-6 bg-white">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
@@ -149,7 +228,6 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Listener Section */}
         <Card>
           <CardContent className="p-6 bg-white">
             {!isListener ? (
@@ -181,7 +259,7 @@ export default function ProfilePage() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Expertise</span>
-                    <span className="font-medium">{expert.expertise}</span>
+                    <span className="font-medium">{expert?.expertise}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Voice Rate</span>
@@ -197,15 +275,17 @@ export default function ProfilePage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Rating</span>
-                    <span className="font-medium">⭐️ {expert.rating}</span>
+                    <span className="font-medium">⭐️ {expert?.rating}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Calls</span>
-                    <span className="font-medium">{expert.calls.length}</span>
+                    <span className="font-medium">
+                      {expert?.calls?.length ?? 0}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Flags</span>
-                    <span className="font-medium">{expert.flags}</span>
+                    <span className="font-medium">{expert?.flags ?? 0}</span>
                   </div>
                 </div>
               </div>
@@ -227,4 +307,29 @@ export default function ProfilePage() {
       />
     </div>
   );
-}
+};
+
+// Export the wrapped component with dynamic import and SSR disabled
+export default dynamic(
+  () =>
+    Promise.resolve(function ProfilePage() {
+      return (
+        <ClientOnly>
+          <ProfileContent />
+        </ClientOnly>
+      );
+    }),
+  { ssr: false }
+);
+
+// to navigate to the login page if the user is not connected
+// useEffect(() => {
+//   if (
+//     authStatus !== "loading" &&
+//     !address &&
+//     !isReconnecting &&
+//     authStatus !== "authenticated"
+//   ) {
+//     router.push("/test");
+//   }
+// }, [authStatus, address, isReconnecting]);
