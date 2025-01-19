@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Montserrat_Alternates, Nunito } from "next/font/google";
 import "./globals.css";
-import { Provider } from "@/lib/provider";
+import WagmiConfigProvider from "@/lib/provider";
+// import { Provider } from "react-redux";
+// import { store, wrapper } from "@/core/store";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,8 +44,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${nunito.variable} antialiased`}
       >
-        <Provider>{children}</Provider>
+        <WagmiConfigProvider>
+          {/* <Provider store={store}>{children}</Provider> */}
+          {children}
+        </WagmiConfigProvider>
       </body>
     </html>
   );
 }
+
+// export default wrapper.withRedux(RootLayout);

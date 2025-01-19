@@ -36,5 +36,5 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-  ]
+, "lib/provider.tsx"  ]
 }
