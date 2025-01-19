@@ -2,11 +2,7 @@
 import { createAuthenticationAdapter } from "@rainbow-me/rainbowkit";
 import { createSiweMessage } from "viem/siwe";
 import { v4 as uuidv4 } from "uuid";
-import {
-  searchUserByAddress,
-  createUser,
-  checkUsernameAvailability,
-} from "./auth";
+import { createUser, checkUsernameAvailability } from "./auth";
 
 let currentAddress = "";
 export const setCurrentAddress = (address: string) => {
@@ -17,14 +13,14 @@ export const authenticationAdapter = createAuthenticationAdapter({
   getNonce: async () => {
     try {
       // First check if user exists
-      const usernameFromStorage = localStorage.getItem("pending_username");
+      const usernameFromStorage =
+        localStorage.getItem("pending_username") ||
+        localStorage.getItem("logged_username");
       const user = await checkUsernameAvailability(usernameFromStorage!);
 
       // If no user exists, create one with a UUID username
       if (user && user.available) {
         const randomUsername = `user_${uuidv4().substring(0, 8)}`;
-        console.log(usernameFromStorage, randomUsername, currentAddress);
-
         await createUser(usernameFromStorage ?? randomUsername, currentAddress);
       }
 
@@ -84,7 +80,10 @@ export const authenticationAdapter = createAuthenticationAdapter({
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
         localStorage.setItem("token", `Bearer ${verifyData.token}`);
-        window.location.href = "/test/profile";
+        const usernameFromStorage = localStorage.getItem("pending_username");
+        localStorage.setItem("logged_username", usernameFromStorage!);
+        localStorage.removeItem("pending_username");
+        // window.location.href = "/test/profile";
         return true;
       }
       return false;

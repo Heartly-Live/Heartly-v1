@@ -7,7 +7,7 @@ import { base, baseSepolia } from "viem/chains";
 const getWalletClient = () => {
   if (typeof window !== "undefined" && window.ethereum) {
     return createWalletClient({
-      chain: base,
+      chain: baseSepolia,
       transport: custom(window.ethereum),
     });
   }

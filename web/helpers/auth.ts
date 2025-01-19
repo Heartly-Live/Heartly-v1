@@ -1,4 +1,7 @@
 "use server";
+
+import { getToken } from "@/lib/provider";
+
 export async function checkUsernameAvailability(username: string) {
   try {
     const response = await fetch(
@@ -37,8 +40,81 @@ export async function checkUsernameAvailability(username: string) {
   }
 }
 
+export const getUserByUsername = async (username: string) => {
+  try {
+    const response = await fetch(`https://heartly.live/api/users/username/${username}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return {
+        success: true,
+        data,
+      };
+    }
+
+    if (data.error === "No user found") {
+      return {
+        success: true,
+        data: null,
+      };
+    }
+
+    throw new Error(data.error || "Failed to get user by username");
+  } catch (error) {
+    console.error("User by username error:", error);
+    return {
+      success: false,
+      error: "Failed to get user by username",
+    };
+  }
+}
+
+
+export const refreshToken = async (walletAddress: string) => {
+  const token = getToken();
+  if (!token) {
+    return {
+      success: false,
+      error: "No token found",
+    };
+  }
+
+  try {
+    const response = await fetch(
+      "https://heartly.live/api/auth/refresh-token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `${token}`,
+        },
+        body: JSON.stringify({
+          walletAddress,
+        }),
+        cache: "no-store",
+      } 
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to refresh token");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("token", data);
+    return { success: true, token: data };
+  } catch (error) {
+    console.error("Token refresh error:", error);
+    return { success: false, error: "Failed to refresh token" };
+  }
+};
+
+
 export async function searchUserByAddress(address: string) {
-  const token = localStorage.getItem("token");
+  const token = getToken();
   if (!token) {
     return {
       success: false,

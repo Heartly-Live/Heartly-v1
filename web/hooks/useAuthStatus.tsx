@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const useAuthStatus = () => {
   const [authStatus, setAuthStatus] = useState<
@@ -9,22 +9,15 @@ const useAuthStatus = () => {
     address: `0x${string}` | undefined,
     isConnecting: boolean
   ) => {
-    console.log(address, isConnecting);
-    
     const token = localStorage.getItem("token");
-
     if (isConnecting && address) {
       setAuthStatus("loading");
-      console.log("loading");
     } else if (address && token) {
-        setAuthStatus("authenticated");
-        console.log("authenticated");
+      setAuthStatus("authenticated");
     } else {
-        setAuthStatus("unauthenticated");
-        console.log("unauthenticated");
+      setAuthStatus("unauthenticated");
     }
   };
-console.log(authStatus);
 
   return { authStatus, handleAuthStatus };
 };
