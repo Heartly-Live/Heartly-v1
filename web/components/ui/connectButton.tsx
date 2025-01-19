@@ -1,17 +1,9 @@
 "use client";
-import { utils } from "@/core/helper";
-import { services } from "@/core/services";
-import { NONCE } from "@/core/services/api-urls";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 // import Image from "next/image";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi"; // Import useDisconnect
+import { useAccount, useDisconnect } from "wagmi"; // Import useDisconnect
 
 export const ConnectWallet = () => {
-  const { address } = useAccount();
-  const { signMessageAsync } = useSignMessage();
-  // const dispatch = useDispatch();
   return (
     <ConnectButton.Custom>
       {({
