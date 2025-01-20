@@ -79,6 +79,19 @@ export const authenticationAdapter = createAuthenticationAdapter({
 
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
+
+        await fetch(
+          `https://heartly.live/api/users`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              walletAddress: currentAddress,
+            }),
+          }
+        );
         localStorage.setItem("token", `Bearer ${verifyData.token}`);
         const usernameFromStorage = localStorage.getItem("pending_username");
         localStorage.setItem("logged_username", usernameFromStorage!);

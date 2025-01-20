@@ -183,6 +183,8 @@ const ProfileContent = () => {
       </div>
     );
   }
+  console.log("isListener::", isListener);
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50">
@@ -200,12 +202,12 @@ const ProfileContent = () => {
             </Avatar>
             <div className="absolute inset-0 bg-gradient-to-br from-orange-300 to-pink-300 rounded-full blur-xl opacity-50" />
           </div>
-          <h1 className="text-2xl font-bold">
+          {/* <h1 className="text-2xl font-bold">
             {isListener ? expert?.name : user?.username ?? "Anonymous User"}
-          </h1>
-          <div className="flex items-center gap-2">
+          </h1> */}
+          {/* <div className="flex items-center gap-2">
             <ConnectWallet />
-          </div>
+          </div> */}
         </div>
 
         <Card className="mb-6 bg-white">
