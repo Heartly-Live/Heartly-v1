@@ -91,15 +91,15 @@ const ProfileContent = () => {
       if (data.experts.length > 0) {
         setIsListener(true);
         setExpert(data.experts[0]);
-        if (data.experts[0].cid) {
-          try {
-            const profileImage = await pinata.gateways.get(data.experts[0].cid);
-            const url = URL.createObjectURL(profileImage.data as Blob);
-            setProfile(url);
-          } catch (error) {
-            console.error("Error fetching profile image:", error);
-          }
-        }
+        // if (data.experts[0].cid) {
+        //   try {
+        //     const profileImage = await pinata.gateways.get(data.experts[0].cid);
+        //     const url = URL.createObjectURL(profileImage.data as Blob);
+        //     setProfile(url);
+        //   } catch (error) {
+        //     console.error("Error fetching profile image:", error);
+        //   }
+        // }
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
