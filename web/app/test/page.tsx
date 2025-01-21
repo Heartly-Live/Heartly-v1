@@ -26,6 +26,7 @@ const Page = () => {
       [filterType]: value,
     }));
   };
+  console.error("listeners:", listeners);
 
   const fetchListeners = async () => {
     if (!address) return; // Don't fetch if no address

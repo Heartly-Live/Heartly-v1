@@ -13,6 +13,9 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PinataSDK } from "pinata-web3";
 import { registerExpert } from "@/lib/contractHelpers/helper";
+import { services } from "@/core/services";
+import { UPDATE_USER } from "@/core/services/api-urls";
+import { useAccount } from "wagmi";
 
 interface ListenerRegistrationDialogProps {
   open: boolean;
@@ -30,26 +33,37 @@ export function ListenerRegistrationDialog({
     expertise: "",
     voiceRate: "",
     videoRate: "",
-    timepledged: "",
+    // timepledged: "",
     languages: "",
     image: null as File | null,
   });
+  const { address } = useAccount();
 
   const [IpfsHash, setIpfsHash] = useState("");
   const handleSubmit = async () => {
-    // Handle registration logic here
-    const cid = await uploadImage();
-    console.log(account);
-    await registerExpert(
-      formData.name,
-      formData.expertise,
-      parseFloat(formData.voiceRate),
-      parseFloat(formData.videoRate),
-      cid,
-      account
-    );
-    console.log("Submitting:", formData, cid);
-    onOpenChange(false);
+    try {
+      // Handle registration logic here
+      const cid = await uploadImage();
+      console.log(account);
+      await registerExpert(
+        formData.name,
+        formData.expertise,
+        parseFloat(formData.voiceRate),
+        parseFloat(formData.videoRate),
+        cid,
+        account
+      );
+      console.log("Submitting:", formData, cid);
+      const resp = await services.put(UPDATE_USER + address, {
+        languages: [formData.languages],
+      });
+      console.log("resp:", resp);
+      if (resp) {
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.log("error:", error);
+    }
   };
 
   const uploadImage = async () => {
@@ -59,10 +73,8 @@ export function ListenerRegistrationDialog({
       pinataJwt: process.env.NEXT_PUBLIC_PINATA_JWT,
       pinataGateway: "orange-select-opossum-767.mypinata.cloud",
     });
-
     const upload = await pinata.upload.file(formData.image!);
     console.log(upload.IpfsHash);
-
     return upload.IpfsHash;
   };
 
@@ -141,7 +153,7 @@ export function ListenerRegistrationDialog({
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    expertise: e.target.value,
+                    languages: e.target.value,
                   }))
                 }
                 placeholder="e.g., English, Hindi"
@@ -181,7 +193,7 @@ export function ListenerRegistrationDialog({
                 step="0.01"
               />
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label>Time Pledged (hrs per week)</Label>
               <Input
                 type="number"
@@ -196,7 +208,7 @@ export function ListenerRegistrationDialog({
                 min="0"
                 step="0.01"
               />
-            </div>
+            </div> */}
           </div>
 
           <Button

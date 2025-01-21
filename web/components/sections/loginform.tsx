@@ -84,17 +84,17 @@ export const LoginForm = () => {
     }, 600);
   };
 
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-    setUsername(value);
-    validateUsername(value);
-  };
+  // const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = e.target.value.trim();
+  //   setUsername(value);
+  //   validateUsername(value);
+  // };
 
-  const handleConnect = () => {
-    if (isUsernameValid && username.length > 3 && openConnectModal) {
-      openConnectModal();
-    }
-  };
+  // const handleConnect = () => {
+  //   if (isUsernameValid && username.length > 3 && openConnectModal) {
+  //     openConnectModal();
+  //   }
+  // };
 
   useEffect(() => {
     return () => {
@@ -133,7 +133,7 @@ export const LoginForm = () => {
           <p>Continue with a wallet 😊</p>
 
           <div className="w-full space-y-2">
-            <div className="relative">
+            {/* <div className="relative">
               <Input
                 placeholder="username"
                 value={username}
@@ -156,7 +156,7 @@ export const LoginForm = () => {
             {error && <p className="text-sm text-red-500 mt-1">{error}</p>}
             {isUsernameValid && !error && (
               <p className="text-sm text-green-500 mt-1">Username available!</p>
-            )}
+            )} */}
           </div>
           {username.length > 0 &&
             !isUsernameValid &&
@@ -194,13 +194,13 @@ export const LoginForm = () => {
             <ConnectWallet />
           )} */}
           <div className="relative flex items-center justify-center">
-            <div
+            {/* <div
               className={`${
                 isUsernameValid || loggedIn
                   ? "hidden"
                   : "z-30 block absolute top-0 left-0 cursor-not-allowed"
               } min-w-full min-h-full opacity-45 bg-white`}
-            ></div>
+            ></div> */}
 
             <div className="flex items-center gap-2">
               <ConnectWallet />

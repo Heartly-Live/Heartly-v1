@@ -1,7 +1,8 @@
 export const SUBGRAPH_URL =
   "https://api.studio.thegraph.com/query/73364/heartly-base-sepolia/version/latest";
 export const CONTRACT_ADDRESS = "0x3D8B5AAC5723769ba3FF7888944540158a1B1E08";
-export const USDC_ADDRESS = "0x9c0110672FB855548Ec28a7ae18346D015C511E1";
+// export const USDC_ADDRESS = "0x9c0110672FB855548Ec28a7ae18346D015C511E1";
+export const USDC_ADDRESS = "0x5E9F5C4918E9eB31755bb84F9AAE126398c10A7A";
 export const CONTRACT_ABI = [
   {
     inputs: [
