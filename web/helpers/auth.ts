@@ -173,7 +173,7 @@ export async function requestNonce(walletAddress: string) {
         cache: "no-store",
       }
     );
-
+    console.log("resp::", response)
     if (!response.ok) {
       throw new Error("Failed to get nonce");
     }

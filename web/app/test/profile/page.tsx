@@ -56,6 +56,9 @@ const ProfileContent = () => {
   const { disconnect } = useDisconnect();
   const { authStatus } = useAuthStatus();
 
+  console.log("expert:::", expert);
+  
+
   const fetchUserProfile = async (userAddress: string) => {
     try {
       const data: any = await request(
@@ -84,7 +87,8 @@ const ProfileContent = () => {
           }
         `
       );
-
+      console.log("data::", data);
+      
       if (data.users.length > 0) {
         setBalance(data.users[0].balance / 10 ** 6);
       }
