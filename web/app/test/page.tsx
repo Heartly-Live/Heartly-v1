@@ -6,9 +6,9 @@ import { SUBGRAPH_URL } from "@/lib/consts";
 import { LoginForm } from "@/components/sections/loginform";
 import { Header } from "@/components/sections/header";
 import useAuthStatus from "@/hooks/useAuthStatus";
-import { SocketProvider } from "@/context/SocketContext";
 import { ListenersList } from "@/components/sections/listenerlist";
 import NoSsr from "@/components/NoSsr";
+import { useSocket } from "@/context/SocketContext";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting } = useAccount();
@@ -21,6 +21,17 @@ const Page = () => {
     rating: "",
   });
   const { authStatus } = useAuthStatus();
+
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket || !localStorage.getItem("token")) {
+      console.log("No socket or token");
+      return;
+    }
+
+    socket.connect();
+  }, []);
 
   const handleFilterChange = (filterType: string, value: string) => {
     setFilters((prev) => ({
@@ -113,12 +124,10 @@ const Page = () => {
 
   return (
     <div className="flex flex-col justify-start items-center gap-4">
-      <SocketProvider>
-        <Header onFilterChange={handleFilterChange} />
-        <NoSsr>
-          <ListenersList listeners={listeners} filters={filters} />
-        </NoSsr>
-      </SocketProvider>
+      <Header onFilterChange={handleFilterChange} />
+      <NoSsr>
+        <ListenersList listeners={listeners} filters={filters} />
+      </NoSsr>
     </div>
   );
 };

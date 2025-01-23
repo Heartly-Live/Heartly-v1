@@ -9,6 +9,7 @@ import {
   DialogOverlay,
   DialogPortal,
 } from "@/components/ui/dialog";
+import { useSocket } from "@/context/SocketContext";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Phone, Star, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -37,6 +38,15 @@ export default function ListenerModal({
   const router = useRouter();
 
   if (!listener) return null;
+
+  const socket = useSocket();
+
+  const handleRequest = () => {
+    if (socket) {
+      const reciever = listener.expertAddress;
+      socket.emit("request-call", { reciever });
+    }
+  };
 
   const handleBeginClick = () => {
     onClose();
@@ -87,22 +97,28 @@ export default function ListenerModal({
                 </div>
               </CardContent>
             </Card>
- 
-              <div className="flex flex-row items-center gap-4">
-                <Button className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors">
-                  <Phone className="w-4 h-4 fill-black text-black" />
-                  <span className="text-sm text-black font-medium">
-                    ${listener.voiceRate / 10 ** 6}/min
-                  </span>
-                </Button>
 
-                <Button className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors">
-                  <Video className="w-4 h-4 fill-black text-black" />
-                  <span className="text-sm text-black font-medium">
-                    ${listener.videoRate / 10 ** 6}/min
-                  </span>
-                </Button>
-              </div>
+            <div className="flex flex-row items-center gap-4">
+              <Button
+                onClick={handleRequest}
+                className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
+              >
+                <Phone className="w-4 h-4 fill-black text-black" />
+                <span className="text-sm text-black font-medium">
+                  ${listener.voiceRate / 10 ** 6}/min
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleRequest}
+                className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
+              >
+                <Video className="w-4 h-4 fill-black text-black" />
+                <span className="text-sm text-black font-medium">
+                  ${listener.videoRate / 10 ** 6}/min
+                </span>
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </DialogPortal>

@@ -26,14 +26,15 @@ export const authenticationAdapter = createAuthenticationAdapter({
 
       // Get nonce
       const nonceResponse = await fetch(
-        `https://heartly.live/api/auth/request-nonce`,
+        //`https://heartly.live/api/auth/request-nonce`,
+        `http://localhost:8000/auth/request-nonce`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ walletAddress: currentAddress }),
-        }
+        },
       );
 
       if (!nonceResponse.ok) {
@@ -63,7 +64,8 @@ export const authenticationAdapter = createAuthenticationAdapter({
   verify: async ({ message, signature }) => {
     try {
       const verifyRes = await fetch(
-        `https://heartly.live/api/auth/verify-signature`,
+        //`https://heartly.live/api/auth/verify-signature`,
+        `http://localhost:8000/auth/verify-signature`,
         {
           method: "POST",
           headers: {
@@ -74,14 +76,14 @@ export const authenticationAdapter = createAuthenticationAdapter({
             signature,
             message,
           }),
-        }
+        },
       );
 
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
-
         await fetch(
-          `https://heartly.live/api/users`,
+          //`https://heartly.live/api/users`
+          `http://localhost:8000/users`,
           {
             method: "POST",
             headers: {
@@ -90,7 +92,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
             body: JSON.stringify({
               walletAddress: currentAddress,
             }),
-          }
+          },
         );
         localStorage.setItem("token", `Bearer ${verifyData.token}`);
         const usernameFromStorage = localStorage.getItem("pending_username");

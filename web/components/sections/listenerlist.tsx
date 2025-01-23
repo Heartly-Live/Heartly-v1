@@ -14,16 +14,6 @@ interface ListenersListProps {
 }
 
 export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
-  const socket = useSocket();
-
-  useEffect(() => {
-    if (!socket) {
-      return;
-    }
-
-    socket.connect();
-  });
-
   const filteredListeners = listeners.filter((listener) => {
     if (filters.expertise && listener.expertise !== filters.expertise)
       return false;

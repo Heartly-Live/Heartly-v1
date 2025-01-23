@@ -17,6 +17,7 @@ import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import dynamic from "next/dynamic";
+import { SocketProvider } from "@/context/SocketContext";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -92,7 +93,9 @@ const ProviderComponent = ({ children }: { children: React.ReactNode }) => {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <ClientOnly>
-          <AuthenticatedProvider>{children}</AuthenticatedProvider>
+          <AuthenticatedProvider>
+            <SocketProvider>{children}</SocketProvider>
+          </AuthenticatedProvider>
         </ClientOnly>
       </QueryClientProvider>
     </WagmiProvider>
