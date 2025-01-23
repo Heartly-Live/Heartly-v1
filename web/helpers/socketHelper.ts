@@ -3,14 +3,15 @@ import { io, Socket } from "socket.io-client";
 let socket: Socket | null = null;
 
 export function getSocket(): Socket | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined") {
+    return null;
+  }
 
-  const token = localStorage.getItem("token");
+  //const token = localStorage.getItem("token");
 
   //if (!token) return null;
 
   if (!socket) {
-    console.log("Creating a socket");
     socket = io("http://localhost:8001", {
       path: "/socket/",
       //autoConnect: false,

@@ -8,6 +8,7 @@ import { Header } from "@/components/sections/header";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import { SocketProvider } from "@/context/SocketContext";
 import { ListenersList } from "@/components/sections/listenerlist";
+import NoSsr from "@/components/NoSsr";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting } = useAccount();
@@ -114,7 +115,9 @@ const Page = () => {
     <div className="flex flex-col justify-start items-center gap-4">
       <SocketProvider>
         <Header onFilterChange={handleFilterChange} />
-        <ListenersList listeners={listeners} filters={filters} />
+        <NoSsr>
+          <ListenersList listeners={listeners} filters={filters} />
+        </NoSsr>
       </SocketProvider>
     </div>
   );

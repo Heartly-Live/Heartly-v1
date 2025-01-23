@@ -18,10 +18,8 @@ export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
 
   useEffect(() => {
     if (!socket) {
-      console.log("No socket found");
       return;
     }
-    console.log("Trying to connect with socket");
 
     socket.connect();
   });

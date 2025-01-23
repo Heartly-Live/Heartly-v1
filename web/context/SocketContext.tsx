@@ -20,8 +20,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    //const token = localStorage.getItem("token");
+    //if (!token) return;
 
     const socketInstance = getSocket();
     if (socketInstance) {
