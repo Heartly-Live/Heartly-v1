@@ -22,16 +22,18 @@ const Page = () => {
   });
   const { authStatus } = useAuthStatus();
 
-  const socket = useSocket();
+  const context = useSocket();
+  if (!context) {
+    return null;
+  }
+  const { socket, connectSocket } = context;
 
   useEffect(() => {
-    if (!socket || !localStorage.getItem("token")) {
-      console.log("No socket or token");
+    if (!socket) {
       return;
     }
-
-    socket.connect();
-  }, []);
+    connectSocket();
+  }, [socket]);
 
   const handleFilterChange = (filterType: string, value: string) => {
     setFilters((prev) => ({

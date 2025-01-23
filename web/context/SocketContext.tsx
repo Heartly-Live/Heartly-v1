@@ -27,9 +27,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     if (!token) return;
 
     const socketInstance = getSocket();
-    if (socketInstance) {
-      setSocket(socketInstance);
-    }
+    if (socketInstance) setSocket(socketInstance);
 
     return () => {
       disconnectSocket();
@@ -40,6 +38,17 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     if (socket && !isConnected) {
       socket.connect();
       setIsConnected(true);
+
+      socket.on("User-not-found", () => {
+        console.log(
+          "Couldnt place the call as the user could not be found among those online",
+        );
+      });
+      /*
+      socket.on("call-request", onCallRequest);
+      socket.on("call-denied", onCallDenied);
+      socket.on("call-accepted", onCallAccepted);
+            */
     }
   };
 

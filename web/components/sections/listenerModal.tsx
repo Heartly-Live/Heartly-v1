@@ -39,7 +39,11 @@ export default function ListenerModal({
 
   if (!listener) return null;
 
-  const socket = useSocket();
+  const context = useSocket();
+
+  if (!context) return null;
+
+  const { socket, connectSocket } = context;
 
   const handleRequest = () => {
     if (socket) {
