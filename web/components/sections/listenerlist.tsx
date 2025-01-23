@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ListenerCard from "@/components/sections/listener-card";
-import { getSocket } from "@/helpers/socketHelper";
+import { useSocket } from "@/context/SocketContext";
 
 interface ListenersListProps {
   listeners: any[];
@@ -13,9 +13,19 @@ interface ListenersListProps {
   };
 }
 
-const socket = getSocket();
-
 export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket) {
+      console.log("No socket found");
+      return;
+    }
+    console.log("Trying to connect with socket");
+
+    socket.connect();
+  });
+
   const filteredListeners = listeners.filter((listener) => {
     if (filters.expertise && listener.expertise !== filters.expertise)
       return false;

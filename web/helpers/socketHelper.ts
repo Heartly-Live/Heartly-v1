@@ -7,12 +7,13 @@ export function getSocket(): Socket | null {
 
   const token = localStorage.getItem("token");
 
-  if (!token) return null;
+  //if (!token) return null;
 
   if (!socket) {
+    console.log("Creating a socket");
     socket = io("http://localhost:8001", {
       path: "/socket/",
-      autoConnect: false,
+      //autoConnect: false,
       //   auth: { token: jwtToken },
     });
 

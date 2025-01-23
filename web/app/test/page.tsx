@@ -5,8 +5,9 @@ import { gql, request } from "graphql-request";
 import { SUBGRAPH_URL } from "@/lib/consts";
 import { LoginForm } from "@/components/sections/loginform";
 import { Header } from "@/components/sections/header";
-import { ListenersList } from "@/components/sections/listenerlist";
 import useAuthStatus from "@/hooks/useAuthStatus";
+import { SocketProvider } from "@/context/SocketContext";
+import { ListenersList } from "@/components/sections/listenerlist";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting } = useAccount();
@@ -111,8 +112,10 @@ const Page = () => {
 
   return (
     <div className="flex flex-col justify-start items-center gap-4">
-      <Header onFilterChange={handleFilterChange} />
-      <ListenersList listeners={listeners} filters={filters} />
+      <SocketProvider>
+        <Header onFilterChange={handleFilterChange} />
+        <ListenersList listeners={listeners} filters={filters} />
+      </SocketProvider>
     </div>
   );
 };
