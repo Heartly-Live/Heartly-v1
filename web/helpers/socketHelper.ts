@@ -1,9 +1,35 @@
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
-export function getSocket(jwtToken?: string) {
-  const socket = io("http://localhost:8001", {
-    path: "/socket/",
-    //   auth: { token: jwtToken },
-  });
+let socket: Socket | null = null;
+
+export function getSocket(): Socket | null {
+  if (typeof window === "undefined") return null;
+
+  const token = localStorage.getItem("token");
+
+  if (!token) return null;
+
+  if (!socket) {
+    socket = io("http://localhost:8001", {
+      path: "/socket/",
+      autoConnect: false,
+      //   auth: { token: jwtToken },
+    });
+
+    socket.on("auth_error", (error: string) => {
+      if (error === "authentication failed") {
+        alert("Session expired. Please log in again");
+        //localStorage.removeItem("token");
+        //window.location.reload();
+      }
+    });
+  }
   return socket;
+}
+
+export function disconnectSocket(): void {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
 }
