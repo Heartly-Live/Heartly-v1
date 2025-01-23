@@ -2,6 +2,7 @@
 
 import React from "react";
 import ListenerCard from "@/components/sections/listener-card";
+import { getSocket } from "@/helpers/socketHelper";
 
 interface ListenersListProps {
   listeners: any[];
@@ -11,6 +12,8 @@ interface ListenersListProps {
     rating: string;
   };
 }
+
+const socket = getSocket();
 
 export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
   const filteredListeners = listeners.filter((listener) => {

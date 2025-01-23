@@ -30,10 +30,10 @@ const Page = () => {
 
   const fetchListeners = async () => {
     if (!address) return; // Don't fetch if no address
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const data: any = await request(
         SUBGRAPH_URL,
@@ -55,7 +55,7 @@ const Page = () => {
               }
             }
           }
-        `
+        `,
       );
       setListeners(data.experts);
     } catch (error) {
@@ -74,7 +74,12 @@ const Page = () => {
   }, [address, isConnecting, isReconnecting]); // Simplified dependencies
 
   // Show login form if not authenticated and not in a connecting state
-  if (!address && !isConnecting && !isReconnecting && authStatus !== "loading") {
+  if (
+    !address &&
+    !isConnecting &&
+    !isReconnecting &&
+    authStatus !== "loading"
+  ) {
     return <LoginForm />;
   }
 
@@ -93,7 +98,7 @@ const Page = () => {
       <div className="flex justify-center items-center h-screen">
         <div className="text-red-500 text-center">
           <p>{error}</p>
-          <button 
+          <button
             onClick={fetchListeners}
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >

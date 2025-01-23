@@ -1,10 +1,9 @@
-import { localStorage } from "@/core/helper";
 import { io } from "socket.io-client";
 
-export function getSocket(jwtToken: string) {
-  const socket = io(`${process.env.BASE_SOCKET_URL_PROD}`, {
+export function getSocket(jwtToken?: string) {
+  const socket = io("http://localhost:8001", {
     path: "/socket/",
-    auth: { token: jwtToken },
+    //   auth: { token: jwtToken },
   });
   return socket;
 }
