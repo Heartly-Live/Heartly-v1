@@ -7,10 +7,11 @@ import useAuthStatus from "@/hooks/useAuthStatus";
 import { ListenersList } from "@/components/sections/listenerlist";
 import NoSsr from "@/components/NoSsr";
 import { useSocket } from "@/context/SocketContext";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting } = useAccount();
-
+  const router = useRouter();
   const context = useSocket();
   if (!context) {
     return null;
@@ -24,6 +25,9 @@ const Page = () => {
     connectSocket();
   }, [socket]);
 
+  useEffect(() => {
+    router.push("/test/listeners");
+  },[])
 
   const { authStatus } = useAuthStatus();
   console.log("authStatus::", authStatus);
@@ -36,7 +40,6 @@ const Page = () => {
   ) {
     return <LoginForm />;
   }
-
 };
 
 export default Page;
