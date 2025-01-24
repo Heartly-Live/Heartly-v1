@@ -24,6 +24,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
         await createUser(usernameFromStorage ?? randomUsername, currentAddress);
       }
 
+
       const fetchNonce = async (): Promise<string> => {
         const nonceResponse = await fetch(
           `https://heartly.live/api/auth/request-nonce`,
@@ -55,6 +56,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
             throw new Error("Failed to create user for wallet address");
           }
         }
+
 
         if (!nonceResponse.ok) {
           throw new Error("Failed to get nonce");
@@ -98,20 +100,12 @@ export const authenticationAdapter = createAuthenticationAdapter({
             signature,
             message,
           }),
-        }
+        },
       );
 
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
-        // await fetch(`https://heartly.live/api/users`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     walletAddress: currentAddress,
-        //   }),
-        // });
+
         localStorage.setItem("token", `Bearer ${verifyData.token}`);
         const usernameFromStorage = localStorage.getItem("pending_username");
         localStorage.setItem("logged_username", usernameFromStorage!);

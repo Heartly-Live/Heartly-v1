@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ListenerCard from "@/components/sections/listener-card";
+import { useSocket } from "@/context/SocketContext";
 
 interface ListenersListProps {
   listeners: any[];
