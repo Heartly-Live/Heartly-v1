@@ -25,10 +25,6 @@ const Page = () => {
     connectSocket();
   }, [socket]);
 
-  useEffect(() => {
-    router.push("/test/listeners");
-  },[])
-
   const { authStatus } = useAuthStatus();
   console.log("authStatus::", authStatus);
 
@@ -39,7 +35,10 @@ const Page = () => {
     authStatus !== "loading"
   ) {
     return <LoginForm />;
+  } else if (authStatus !== "loading") {
+    router.push("/test/listeners");
   }
+  return null;
 };
 
 export default Page;
