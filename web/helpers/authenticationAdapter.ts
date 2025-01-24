@@ -24,24 +24,48 @@ export const authenticationAdapter = createAuthenticationAdapter({
         await createUser(usernameFromStorage ?? randomUsername, currentAddress);
       }
 
-      // Get nonce
-      const nonceResponse = await fetch(
-        `https://heartly.live/api/auth/request-nonce`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ walletAddress: currentAddress }),
+      const fetchNonce = async (): Promise<string> => {
+        const nonceResponse = await fetch(
+          `https://heartly.live/api/auth/request-nonce`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ walletAddress: currentAddress }),
+          }
+        );
+
+        if (nonceResponse?.status === 400) {
+          // Create the user if it doesn't exist
+          const userResp = await fetch(`https://heartly.live/api/users`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              walletAddress: currentAddress,
+            }),
+          });
+
+          if (userResp.ok) {
+            // Retry fetching nonce after user creation
+            return await fetchNonce();
+          } else {
+            throw new Error("Failed to create user for wallet address");
+          }
         }
-      );
 
-      if (!nonceResponse.ok) {
-        throw new Error("Failed to get nonce");
-      }
+        if (!nonceResponse.ok) {
+          throw new Error("Failed to get nonce");
+        }
 
-      const nonceData = await nonceResponse.json();
-      return nonceData.nonce;
+        const nonceData = await nonceResponse.json();
+        return nonceData.nonce;
+      };
+
+      // Call the fetchNonce function
+      return await fetchNonce();
     } catch (error) {
       console.error("Error in getNonce:", error);
       throw error;
@@ -79,24 +103,20 @@ export const authenticationAdapter = createAuthenticationAdapter({
 
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
-
-        await fetch(
-          `https://heartly.live/api/users`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              walletAddress: currentAddress,
-            }),
-          }
-        );
+        // await fetch(`https://heartly.live/api/users`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     walletAddress: currentAddress,
+        //   }),
+        // });
         localStorage.setItem("token", `Bearer ${verifyData.token}`);
         const usernameFromStorage = localStorage.getItem("pending_username");
         localStorage.setItem("logged_username", usernameFromStorage!);
         localStorage.removeItem("pending_username");
-        // window.location.href = "/test/profile";
+        window.location.href = "/test/listeners";
         return true;
       }
       return false;
