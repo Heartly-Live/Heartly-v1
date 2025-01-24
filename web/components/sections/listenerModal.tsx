@@ -34,14 +34,14 @@ export default function ListenerModal({
   onClose,
   listener,
 }: ListenerModalProps) {
-  const router = useRouter();
+  // const router = useRouter();
 
   if (!listener) return null;
 
-  const handleBeginClick = () => {
-    onClose();
-    router.push("/test/call/0");
-  };
+  // const handleBeginClick = () => {
+  //   onClose();
+  //   router.push("/test/call/0");
+  // };
 
   console.log("listener::", listener);
   

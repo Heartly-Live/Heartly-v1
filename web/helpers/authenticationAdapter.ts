@@ -9,12 +9,6 @@ export const setCurrentAddress = (address: string) => {
   currentAddress = address;
 };
 
-const updateQueryWithoutReload = (query: any) => {
-  const queryString = new URLSearchParams(query).toString();
-  const newUrl = `${window.location.pathname}?${queryString}`;
-  window.history.pushState(null, "", newUrl); // Update the URL without reloading
-};
-
 export const authenticationAdapter = createAuthenticationAdapter({
   getNonce: async () => {
     try {
@@ -122,8 +116,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
         const usernameFromStorage = localStorage.getItem("pending_username");
         localStorage.setItem("logged_username", usernameFromStorage!);
         localStorage.removeItem("pending_username");
-        // window.location.href = "/test/profile";
-        updateQueryWithoutReload({ isLoggedIn: true });
+        window.location.href = "/test/listeners";
         return true;
       }
       return false;

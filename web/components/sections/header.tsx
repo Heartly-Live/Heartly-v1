@@ -6,6 +6,7 @@ import Logo from "@/assets/Logo.png";
 import { Button } from "@/components/ui/button";
 import { useDisconnectWallet } from "@/components/ui/connectButton";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface HeaderProps {
   onFilterChange: (filterType: string, value: string) => void;
@@ -25,14 +26,22 @@ export const Header = ({ onFilterChange }: HeaderProps) => {
     <section className="flex justify-center items-center w-full">
       <div className="flex justify-between items-center w-full p-4">
         <div className="flex items-center gap-4">
-          <Image src={Logo} alt="Logo" className="w-12 h-12" />
-          <div className="flex flex-col items-start">
-            <div className="text-2xl font-nunito font-bold">{`Let's Talk`}</div>
-            <div className="text-xs font-thin flex justify-center items-center gap-2">
-              <div>243 listeners online</div>
-              <div className="w-[8px] h-[8px] bg-green-500 rounded-full"></div>
+          <Link
+            href={"/"}
+            style={{
+              display: "flex",
+            }}
+            className=" flex-row gap-2 align-items-center"
+          >
+            <Image src={Logo} alt="Logo" className="w-12 h-12" />
+            <div className="flex flex-col items-start">
+              <div className="text-2xl font-nunito font-bold">{`Let's Talk`}</div>
+              <div className="text-xs font-thin flex justify-center items-center gap-2">
+                <div>243 listeners online</div>
+                <div className="w-[8px] h-[8px] bg-green-500 rounded-full"></div>
+              </div>
             </div>
-          </div>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <FilterSelect

@@ -17,6 +17,7 @@ import { refreshToken } from "@/helpers/auth";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import BottomNavbar from "@/components/sections/BottomNavbar";
 
 interface FetchedUser {
   username: string;
@@ -311,6 +312,7 @@ const ProfileContent = () => {
         onOpenChange={setShowListenerDialog}
         account={address}
       />
+       <BottomNavbar />
     </div>
   );
 };

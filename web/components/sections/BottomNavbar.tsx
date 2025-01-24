@@ -22,7 +22,7 @@ const items = [
   {
     title: "list",
     icon: <List className="h-4 w-4" />,
-    href: "/test",
+    href: "/test/listeners",
   },
   {
     title: "history",
