@@ -1,8 +1,12 @@
-import type { Metadata } from "next";
+"use client";
+
+// import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Montserrat_Alternates, Nunito } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/lib/provider";
+import * as ProviderProps from "react-redux";
+import { store, wrapper } from "@/core/store";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,12 +31,12 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
-export const metadata: Metadata = {
-  title: "Heartly",
-  description: "A App to help you connect with people ",
-};
+// export const metadata: Metadata = {
+//   title: "Heartly",
+//   description: "A App to help you connect with people ",
+// };
 
-export default function RootLayout({
+function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -42,8 +46,16 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${nunito.variable} antialiased`}
       >
-        <Provider>{children}</Provider>
+        {/* <Provider>{children}</Provider> */}
+        <Provider>
+          {/* <ProviderProps.Provider store={store}> */}
+            {children}
+          {/* </ProviderProps.Provider> */}
+        </Provider>
       </body>
     </html>
   );
 }
+
+// export default wrapper.withRedux(RootLayout);
+export default RootLayout;

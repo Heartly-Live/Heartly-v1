@@ -45,7 +45,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${montserrat.variable} ${nunito.variable} antialiased bg-gradient-to-b from-[#FFA2C933] to-[#FEBF5D33] h-full`}
       >
         <Provider>{children}</Provider>
-        <BottomNavbar />
+        {/* <BottomNavbar /> */}
       </body>
     </html>
   );

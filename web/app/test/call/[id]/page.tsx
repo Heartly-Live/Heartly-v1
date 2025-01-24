@@ -2,14 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-// import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import FeedbackDialog from "@/components/sections/feedbackDialog";
 import PaymentDialog from "@/components/sections/paymentDialog";
 
 export default function CallPage() {
-  //   const router = useRouter();
   const [isConnected, setIsConnected] = useState(false);
   const [time, setTime] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);

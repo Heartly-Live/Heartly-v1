@@ -17,6 +17,7 @@ import { refreshToken } from "@/helpers/auth";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import BottomNavbar from "@/components/sections/BottomNavbar";
 
 interface FetchedUser {
   username: string;
@@ -56,6 +57,9 @@ const ProfileContent = () => {
   const { disconnect } = useDisconnect();
   const { authStatus } = useAuthStatus();
 
+  console.log("expert:::", expert);
+  
+
   const fetchUserProfile = async (userAddress: string) => {
     try {
       const data: any = await request(
@@ -84,7 +88,8 @@ const ProfileContent = () => {
           }
         `
       );
-
+      console.log("data::", data);
+      
       if (data.users.length > 0) {
         setBalance(data.users[0].balance / 10 ** 6);
       }
@@ -307,6 +312,7 @@ const ProfileContent = () => {
         onOpenChange={setShowListenerDialog}
         account={address}
       />
+       <BottomNavbar />
     </div>
   );
 };

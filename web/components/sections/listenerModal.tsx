@@ -35,9 +35,10 @@ export default function ListenerModal({
   onClose,
   listener,
 }: ListenerModalProps) {
-  const router = useRouter();
+  // const router = useRouter();
 
   if (!listener) return null;
+
 
   const context = useSocket();
 
@@ -52,10 +53,13 @@ export default function ListenerModal({
     }
   };
 
-  const handleBeginClick = () => {
-    onClose();
-    router.push("/test/call/0");
-  };
+  // const handleBeginClick = () => {
+  //   onClose();
+  //   router.push("/test/call/0");
+  // };
+
+  console.log("listener::", listener);
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -103,10 +107,12 @@ export default function ListenerModal({
             </Card>
 
             <div className="flex flex-row items-center gap-4">
+
               <Button
                 onClick={handleRequest}
                 className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
               >
+
                 <Phone className="w-4 h-4 fill-black text-black" />
                 <span className="text-sm text-black font-medium">
                   ${listener.voiceRate / 10 ** 6}/min
@@ -117,6 +123,7 @@ export default function ListenerModal({
                 onClick={handleRequest}
                 className="flex items-center gap-2 bg-white hover:bg-gradient-to-r from-orange-400 to-pink-400 transition-colors"
               >
+
                 <Video className="w-4 h-4 fill-black text-black" />
                 <span className="text-sm text-black font-medium">
                   ${listener.videoRate / 10 ** 6}/min
