@@ -26,8 +26,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
 
       // Get nonce
       const nonceResponse = await fetch(
-        //`https://heartly.live/api/auth/request-nonce`,
-        `http://localhost:8000/auth/request-nonce`,
+        `https://heartly.live/api/auth/request-nonce`,
         {
           method: "POST",
           headers: {
@@ -64,8 +63,7 @@ export const authenticationAdapter = createAuthenticationAdapter({
   verify: async ({ message, signature }) => {
     try {
       const verifyRes = await fetch(
-        //`https://heartly.live/api/auth/verify-signature`,
-        `http://localhost:8000/auth/verify-signature`,
+        `https://heartly.live/api/auth/verify-signature`,
         {
           method: "POST",
           headers: {
@@ -82,8 +80,8 @@ export const authenticationAdapter = createAuthenticationAdapter({
       const verifyData = await verifyRes.json();
       if (verifyData.token) {
         await fetch(
-          //`https://heartly.live/api/users`
-          `http://localhost:8000/users`,
+          `https://heartly.live/api/users`,
+          //`http://localhost:8000/users`,
           {
             method: "POST",
             headers: {

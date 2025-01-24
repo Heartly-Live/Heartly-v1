@@ -12,7 +12,7 @@ export function getSocket(): Socket | null {
   if (!token) return null;
 
   if (!socket) {
-    socket = io("http://localhost:8001", {
+    socket = io("https://heartly.live/socket", {
       path: "/socket/",
       autoConnect: false,
       auth: { token },
