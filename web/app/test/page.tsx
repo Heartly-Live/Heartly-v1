@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAccount } from "wagmi";
 import { LoginForm } from "@/components/sections/loginform";
 import { Header } from "@/components/sections/header";
@@ -8,7 +8,6 @@ import { ListenersList } from "@/components/sections/listenerlist";
 import NoSsr from "@/components/NoSsr";
 import { useSocket } from "@/context/SocketContext";
 
-import useAuthStatus from "@/hooks/useAuthStatus";
 const Page = () => {
   const { address, isConnecting, isReconnecting } = useAccount();
 
