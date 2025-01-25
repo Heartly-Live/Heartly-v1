@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import dynamic from "next/dynamic";
 import { SocketProvider } from "@/context/SocketContext";
+import { PeerProvider } from "@/context/PeerContext";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
@@ -94,7 +95,9 @@ const ProviderComponent = ({ children }: { children: React.ReactNode }) => {
       <QueryClientProvider client={queryClient}>
         <ClientOnly>
           <AuthenticatedProvider>
-            <SocketProvider>{children}</SocketProvider>
+            <SocketProvider>
+              <PeerProvider>{children}</PeerProvider>
+            </SocketProvider>
           </AuthenticatedProvider>
         </ClientOnly>
       </QueryClientProvider>

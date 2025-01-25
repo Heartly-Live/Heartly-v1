@@ -45,11 +45,19 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
           "Couldnt place the call as the user could not be found among those online",
         );
       });
-      /*
-      socket.on("call-request", onCallRequest);
-      socket.on("call-denied", onCallDenied);
-      socket.on("call-accepted", onCallAccepted);
-            */
+      socket.on("call-request", ({ caller, roomId }) => {
+        if (confirm(`You have a call request from ${caller}`) == true)
+          console.log("Handling call");
+        //         handleCall(caller, roomId);
+        else socket.emit("call-denied", { caller, roomId });
+      });
+      socket.on("call-denied", ({ username }) => {
+        console.log(`Call denied by reciever ${username}`);
+      });
+      socket.on("call-accepted", ({ username, peerId }) => {
+        console.log(`Call accepter by reciever ${username}`);
+        //       createCall(peerId);
+      });
     } else {
       console.log("Cant get socket");
     }

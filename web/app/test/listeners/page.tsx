@@ -10,6 +10,7 @@ import useAuthStatus from "@/hooks/useAuthStatus";
 import BottomNavbar from "@/components/sections/BottomNavbar";
 // import { getToken } from "@/lib/provider";
 import { useSocket } from "@/context/SocketContext";
+import { usePeer } from "@/context/PeerContext";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting, isConnected } = useAccount();
@@ -36,6 +37,21 @@ const Page = () => {
     }
     connectSocket();
   }, [socket]);
+
+  const peerContext = usePeer();
+
+  if (!peerContext) {
+    return null;
+  }
+  const { peer, createPeer, getPeerId } = peerContext;
+
+  useEffect(() => {
+    if (!peer) {
+      return;
+    }
+    createPeer();
+    console.log("Peer id:", getPeerId);
+  }, [peer]);
   // const [isToken, setIsToken] = useState<string | null>(null);
   // const [isLoggedIn, setIsLoggedIn] = useState<string | null>(null);
   const { authStatus } = useAuthStatus();
