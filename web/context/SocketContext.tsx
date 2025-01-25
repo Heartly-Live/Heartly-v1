@@ -38,6 +38,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     if (socket && !isConnected) {
       socket.connect();
       setIsConnected(true);
+      console.log("Socket connected");
 
       socket.on("User-not-found", () => {
         console.log(
@@ -49,6 +50,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       socket.on("call-denied", onCallDenied);
       socket.on("call-accepted", onCallAccepted);
             */
+    } else {
+      console.log("Cant get socket");
     }
   };
 

@@ -14,12 +14,14 @@ const Page = () => {
   const router = useRouter();
   const context = useSocket();
   if (!context) {
+    console.log("Cant get context!");
     return null;
   }
   const { socket, connectSocket } = context;
 
   useEffect(() => {
     if (!socket) {
+      console.log("Cant get socket!");
       return;
     }
     connectSocket();

@@ -9,6 +9,7 @@ import { ListenersList } from "@/components/sections/listenerlist";
 import useAuthStatus from "@/hooks/useAuthStatus";
 import BottomNavbar from "@/components/sections/BottomNavbar";
 // import { getToken } from "@/lib/provider";
+import { useSocket } from "@/context/SocketContext";
 
 const Page = () => {
   const { address, isConnecting, isReconnecting, isConnected } = useAccount();
@@ -20,6 +21,21 @@ const Page = () => {
     language: "",
     rating: "",
   });
+
+  const context = useSocket();
+  if (!context) {
+    console.log("Cant get context!");
+    return null;
+  }
+  const { socket, connectSocket } = context;
+
+  useEffect(() => {
+    if (!socket) {
+      console.log("Cant get socket!");
+      return;
+    }
+    connectSocket();
+  }, [socket]);
   // const [isToken, setIsToken] = useState<string | null>(null);
   // const [isLoggedIn, setIsLoggedIn] = useState<string | null>(null);
   const { authStatus } = useAuthStatus();
@@ -78,7 +94,7 @@ const Page = () => {
               }
             }
           }
-        `
+        `,
       );
       setListeners(data.experts);
     } catch (error) {

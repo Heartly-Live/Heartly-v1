@@ -4,16 +4,20 @@ let socket: Socket | null = null;
 
 export function getSocket(): Socket | null {
   if (typeof window === "undefined") {
+    console.log("Not a window");
     return null;
   }
 
   const token = localStorage.getItem("token");
 
-  if (!token) return null;
+  if (!token) {
+    console.log("Cant find token");
+    return null;
+  }
 
   if (!socket) {
-    socket = io("https://heartly.live/socket", {
-      path: "/socket/",
+    socket = io("https://heartly.live/", {
+      path: "/socket/socket/",
       autoConnect: false,
       auth: { token },
     });
