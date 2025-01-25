@@ -30,7 +30,7 @@ export const PeerProvider = ({ children }: { children: ReactNode }) => {
       path: "/peerjs/peer",
       secure: true,
     };
-    const newPeer = new Peer(id, options);
+    const newPeer = new Peer(id);
 
     newPeer.on("open", (id) => {
       console.log("Peer ID:", id);

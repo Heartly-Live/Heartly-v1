@@ -41,17 +41,16 @@ const Page = () => {
   const peerContext = usePeer();
 
   if (!peerContext) {
+    console.log("Cant get peer context");
     return null;
   }
-  const { peer, createPeer, getPeerId } = peerContext;
+  const { createPeer, getPeerId } = peerContext;
 
   useEffect(() => {
-    if (!peer) {
-      return;
-    }
-    createPeer();
-    console.log("Peer id:", getPeerId);
-  }, [peer]);
+    const peer = createPeer();
+
+    console.log("Peer id:", getPeerId());
+  }, []);
   // const [isToken, setIsToken] = useState<string | null>(null);
   // const [isLoggedIn, setIsLoggedIn] = useState<string | null>(null);
   const { authStatus } = useAuthStatus();
