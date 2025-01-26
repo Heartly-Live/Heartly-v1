@@ -2,21 +2,42 @@
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { disconnectSocket } from "@/helpers/socketHelper";
 import { showSuccessMsg, showErrMsg } from "@/core/helper/utils";
+import { useSocket } from "@/context/SocketContext";
+import { usePeer } from "@/context/PeerContext";
 
 export default function IncomingCallPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const caller = searchParams.get("caller");
+  const roomId = searchParams.get("roomId");
+
+  const context = useSocket();
+  if (!context) {
+    console.log("Cannot get context");
+    return null;
+  }
+  const { socket } = context;
 
   const handleAcceptCall = () => {
+    const peerContext = usePeer();
+    if (!peerContext) {
+      console.log("Cannot get peer context");
+      return null;
+    }
+    const { getPeerId } = peerContext;
+    const peerId = getPeerId();
+    console.log("Peer id: ", peerId);
+    socket?.emit("call-accepted", { caller, roomId, peerId });
     showSuccessMsg("Call accepted");
     router.push("/test/call/123"); // Replace 123 with actual call ID
   };
 
   const handleDeclineCall = () => {
-    disconnectSocket();
+    socket?.emit("call-denied", { caller, roomId });
     showErrMsg("Call declined");
     router.push("/test/listeners");
   };

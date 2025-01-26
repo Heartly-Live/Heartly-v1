@@ -7,6 +7,7 @@ import {
 } from "react";
 import { getSocket, disconnectSocket } from "../helpers/socketHelper";
 import { Socket } from "socket.io-client";
+import { useRouter } from "next/navigation";
 
 interface SocketContextType {
   socket: Socket | null;
@@ -46,10 +47,9 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
         );
       });
       socket.on("call-request", ({ caller, roomId }) => {
-        if (confirm(`You have a call request from ${caller}`) == true)
-          console.log("Handling call");
-        //         handleCall(caller, roomId);
-        else socket.emit("call-denied", { caller, roomId });
+        console.log("Handling call");
+        const router = useRouter();
+        router.push(`/test/incoming?caller=${caller}&roomId=${roomId}`);
       });
       socket.on("call-denied", ({ username }) => {
         console.log(`Call denied by reciever ${username}`);
