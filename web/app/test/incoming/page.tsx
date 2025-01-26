@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { disconnectSocket } from "@/helpers/socketHelper";
 import { showSuccessMsg, showErrMsg } from "@/core/helper/utils";
 import { useSocket } from "@/context/SocketContext";
 import { usePeer } from "@/context/PeerContext";
+import { useEffect } from "react";
 
 export default function IncomingCallPage() {
   const router = useRouter();
@@ -20,15 +20,34 @@ export default function IncomingCallPage() {
     console.log("Cannot get context");
     return null;
   }
-  const { socket } = context;
+
+  const { socket, connectSocket } = context;
+
+  useEffect(() => {
+    if (!socket) {
+      console.log("Cannot get socket");
+      return;
+    }
+    connectSocket();
+  }, [socket]);
+
+  const peerContext = usePeer();
+  if (!peerContext) {
+    console.log("Cannot get peer context");
+    return null;
+  }
+
+  let { peer, createPeer, getPeerId, disconnectPeer } = peerContext;
+
+  useEffect(() => {
+    if (!peer) {
+      console.log("Cannot get peer");
+      return;
+    }
+    peer = createPeer();
+  }, [peer]);
 
   const handleAcceptCall = () => {
-    const peerContext = usePeer();
-    if (!peerContext) {
-      console.log("Cannot get peer context");
-      return null;
-    }
-    const { getPeerId } = peerContext;
     const peerId = getPeerId();
     console.log("Peer id: ", peerId);
     socket?.emit("call-accepted", { caller, roomId, peerId });
@@ -37,6 +56,7 @@ export default function IncomingCallPage() {
   };
 
   const handleDeclineCall = () => {
+    disconnectPeer();
     socket?.emit("call-denied", { caller, roomId });
     showErrMsg("Call declined");
     router.push("/test/listeners");
