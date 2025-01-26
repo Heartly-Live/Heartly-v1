@@ -96,6 +96,8 @@
 
 "use client";
 
+import { usePeer } from "@/context/PeerContext";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function VideoStream() {
@@ -104,6 +106,58 @@ export default function VideoStream() {
   const wsRef = useRef<WebSocket | null>(null);
   const mediaSourceRef = useRef<MediaSource | null>(null);
   const sourceBufferRef = useRef<SourceBuffer | null>(null);
+
+  const [myMediaStream, setMyMediaStream] = useState<MediaStream | null>(null);
+  const [theirMediaStream, setTheirMediaStream] = useState<MediaStream | null>(
+    null,
+  );
+
+  const searchParams = useSearchParams();
+  const peerId = searchParams.get("peerId");
+  const role = searchParams.get("role");
+
+  const peerContext = usePeer();
+  if (!peerContext) {
+    console.log("Cant get peer context");
+    return null;
+  }
+  let { peer, createPeer, getPeerId } = peerContext;
+
+  useEffect(() => {
+    if (role === "caller") {
+      if (!peer) {
+        peer = createPeer();
+      }
+      if (peerId && myMediaStream) {
+        const call = peer.call(peerId, myMediaStream);
+
+        call.on("stream", (stream) => {
+          console.log("Recieving a call");
+          setTheirMediaStream(stream);
+        });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (role === "reciever") {
+      if (!peer) {
+        console.log(
+          "ERROR: Peer object has to exist for reciever to recieve calls",
+        );
+      } else {
+        peer.on("call", (call) => {
+          console.log("Recieving a call");
+          if (myMediaStream) {
+            call.answer(myMediaStream);
+            call.on("stream", (stream) => {
+              setTheirMediaStream(stream);
+            });
+          }
+        });
+      }
+    }
+  }, []);
 
   const initializeMediaSource = () => {
     mediaSourceRef.current = new MediaSource();
@@ -114,7 +168,7 @@ export default function VideoStream() {
 
     mediaSourceRef.current.addEventListener("sourceopen", () => {
       sourceBufferRef.current = mediaSourceRef.current!.addSourceBuffer(
-        'video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+        'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
       );
       startWebSocketConnection();
     });

@@ -37,6 +37,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
   const connectSocket = () => {
     if (socket && !isConnected) {
+      const router = useRouter();
       socket.connect();
       setIsConnected(true);
       console.log("Socket connected");
@@ -48,15 +49,15 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
       });
       socket.on("call-request", ({ caller, roomId }) => {
         console.log("Handling call");
-        const router = useRouter();
         router.push(`/test/incoming?caller=${caller}&roomId=${roomId}`);
       });
       socket.on("call-denied", ({ username }) => {
         console.log(`Call denied by reciever ${username}`);
       });
       socket.on("call-accepted", ({ username, peerId }) => {
+        const role = "caller";
         console.log(`Call accepter by reciever ${username}`);
-        //       createCall(peerId);
+        router.push(`/test/call/videoCall?peerId=${peerId}&role=${role}`);
       });
     } else {
       console.log("Cant get socket");

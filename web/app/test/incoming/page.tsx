@@ -41,25 +41,25 @@ export default function IncomingCallPage() {
 
   useEffect(() => {
     if (!peer) {
-      console.log("Cannot get peer");
-      return;
+      peer = createPeer();
     }
-    peer = createPeer();
   }, [peer]);
 
   const handleAcceptCall = () => {
     const peerId = getPeerId();
     console.log("Peer id: ", peerId);
     socket?.emit("call-accepted", { caller, roomId, peerId });
-    showSuccessMsg("Call accepted");
-    router.push("/test/call/123"); // Replace 123 with actual call ID
+    const role = "reciever";
+    router.push(`/test/call/videoCall?peerId=${peerId}&role=${role}`);
+    //showSuccessMsg("Call accepted");
+    //router.push("/test/call/123"); // Replace 123 with actual call ID
   };
 
   const handleDeclineCall = () => {
     disconnectPeer();
     socket?.emit("call-denied", { caller, roomId });
-    showErrMsg("Call declined");
-    router.push("/test/listeners");
+    //showErrMsg("Call declined");
+    //router.push("/test/listeners");
   };
 
   return (
