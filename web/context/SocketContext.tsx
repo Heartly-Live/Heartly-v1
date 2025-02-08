@@ -18,6 +18,7 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType | null>(null);
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
 
@@ -37,7 +38,6 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
   const connectSocket = () => {
     if (socket && !isConnected) {
-      const router = useRouter();
       socket.connect();
       setIsConnected(true);
       console.log("Socket connected");
