@@ -1,99 +1,3 @@
-// "use client";
-
-// import { useEffect, useRef, useState } from "react";
-
-// export default function VideoStream() {
-//   const videoRef = useRef<HTMLVideoElement>(null);
-//   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
-//   const [isStreaming, setIsStreaming] = useState(false);
-
-//   // Request access to media devices
-//   const startStream = async () => {
-//     try {
-//       const stream = await navigator.mediaDevices.getUserMedia({
-//         video: true,
-//         audio: false,
-//       });
-
-//       setMediaStream(stream);
-//       setIsStreaming(true);
-
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = stream;
-//       }
-//     } catch (error) {
-//       console.error("Error accessing media devices:", error);
-//       alert("Error accessing camera. Please check permissions.");
-//     }
-//   };
-
-//   // Stop the stream
-//   const stopStream = () => {
-//     if (mediaStream) {
-//       mediaStream.getTracks().forEach((track) => track.stop());
-//       setMediaStream(null);
-//       setIsStreaming(false);
-
-//       if (videoRef.current) {
-//         videoRef.current.srcObject = null;
-//       }
-//     }
-//   };
-
-//   // Cleanup on component unmount
-//   useEffect(() => {
-//     return () => {
-//       if (mediaStream) {
-//         mediaStream.getTracks().forEach((track) => track.stop());
-//       }
-//     };
-//   }, [mediaStream]);
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-8">
-//       <div className="max-w-4xl mx-auto">
-//         <h1 className="text-3xl font-bold mb-6">Video Stream Demo</h1>
-
-//         <div className="bg-white rounded-lg shadow-lg p-6">
-//           <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-4">
-//             <video
-//               ref={videoRef}
-//               autoPlay
-//               playsInline
-//               muted
-//               className="w-full h-full object-cover"
-//             />
-//           </div>
-
-//           <div className="flex justify-center gap-4">
-//             <button
-//               onClick={isStreaming ? stopStream : startStream}
-//               className={`px-6 py-3 rounded-lg font-medium text-white ${
-//                 isStreaming
-//                   ? "bg-red-500 hover:bg-red-600"
-//                   : "bg-blue-500 hover:bg-blue-600"
-//               } transition-colors`}
-//             >
-//               {isStreaming ? "Stop Streaming" : "Start Streaming"}
-//             </button>
-//           </div>
-//         </div>
-
-//         <div className="mt-6 text-gray-600">
-//           <p className="mb-2">Instructions:</p>
-//           <ul className="list-disc list-inside">
-//             <li>Click &quot;Start Streaming&quot; to begin video capture</li>
-//             <li>Your browser will ask for camera permissions</li>
-//             <li>Click &quot;Stop Streaming&quot; to end the session</li>
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// app/video-stream/page.tsx
-
 "use client";
 
 import { usePeer } from "@/context/PeerContext";
@@ -102,14 +6,16 @@ import { useEffect, useRef, useState } from "react";
 
 export default function VideoStream() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const wsRef = useRef<WebSocket | null>(null);
-  const mediaSourceRef = useRef<MediaSource | null>(null);
-  const sourceBufferRef = useRef<SourceBuffer | null>(null);
+  const [connectionStatus, setConnectionStatus] = useState<
+    "connecting" | "connected" | "disconnected"
+  >("connecting");
+  const [error, setError] = useState<string | null>(null);
 
   const [myMediaStream, setMyMediaStream] = useState<MediaStream | null>(null);
   const [theirMediaStream, setTheirMediaStream] = useState<MediaStream | null>(
-    null,
+    null
   );
 
   const searchParams = useSearchParams();
@@ -118,124 +24,223 @@ export default function VideoStream() {
 
   const peerContext = usePeer();
   if (!peerContext) {
-    console.log("Cant get peer context");
+    console.log("Can't get peer context");
     return null;
   }
-  let { peer, createPeer, getPeerId } = peerContext;
+  const { peer, createPeer } = peerContext;
 
   useEffect(() => {
-    if (role === "caller") {
-      if (!peer) {
-        peer = createPeer();
+    if (!peer) {
+      console.log("Creating new peer");
+      const newPeer = createPeer();
+
+      newPeer.on("open", (id) => {
+        console.log("Peer opened with ID:", id);
+      });
+
+      newPeer.on("error", (err) => {
+        console.error("Peer error:", err);
+        setError(`Peer connection error: ${err.message}`);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const initializeStream = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        setMyMediaStream(stream);
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error("Error accessing media devices:", error);
+        setError(
+          "Failed to access camera and microphone. Please ensure permissions are granted."
+        );
       }
-      if (peerId && myMediaStream) {
+    };
+
+    initializeStream();
+
+    return () => {
+      myMediaStream?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (role === "caller" && peer && peerId && myMediaStream) {
+      console.log("Initiating call as caller to:", peerId);
+      setConnectionStatus("connecting");
+
+      try {
         const call = peer.call(peerId, myMediaStream);
 
-        call.on("stream", (stream) => {
-          console.log("Recieving a call");
-          setTheirMediaStream(stream);
+        if (!call) {
+          console.error("Failed to initiate call");
+          setError("Failed to initiate call");
+          return;
+        }
+
+        call.on("stream", (remoteStream) => {
+          console.log("Receiving remote stream as caller");
+          setTheirMediaStream(remoteStream);
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = remoteStream;
+          }
+          setConnectionStatus("connected");
+          setIsConnected(true);
         });
+
+        call.on("error", (err) => {
+          console.error("Call error:", err);
+          setError("Failed to connect to remote user");
+          setConnectionStatus("disconnected");
+        });
+
+        call.on("close", () => {
+          console.log("Call closed");
+          setConnectionStatus("disconnected");
+          setIsConnected(false);
+        });
+
+        return () => {
+          call.close();
+        };
+      } catch (err) {
+        console.error("Error making call:", err);
+        setError("Failed to make call");
+        setConnectionStatus("disconnected");
       }
     }
-  }, []);
+  }, [role, peer, peerId, myMediaStream]);
 
   useEffect(() => {
-    if (role === "reciever") {
-      if (!peer) {
-        console.log(
-          "ERROR: Peer object has to exist for reciever to recieve calls",
-        );
-      } else {
-        peer.on("call", (call) => {
-          console.log("Recieving a call");
-          if (myMediaStream) {
-            call.answer(myMediaStream);
-            call.on("stream", (stream) => {
-              setTheirMediaStream(stream);
-            });
+    if (role === "receiver" && peer && myMediaStream) {
+      setConnectionStatus("connecting");
+
+      const handleCall = (call: any) => {
+        console.log("Receiving a call");
+        call.answer(myMediaStream);
+
+        call.on("stream", (remoteStream: MediaStream) => {
+          console.log("Receiving remote stream");
+          setTheirMediaStream(remoteStream);
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = remoteStream;
           }
+          setConnectionStatus("connected");
+          setIsConnected(true);
         });
-      }
+
+        call.on("error", (err: Error) => {
+          console.error("Call error:", err);
+          setError("Failed to connect to remote user");
+          setConnectionStatus("disconnected");
+        });
+
+        call.on("close", () => {
+          setConnectionStatus("disconnected");
+          setIsConnected(false);
+        });
+      };
+
+      peer.on("call", handleCall);
+
+      return () => {
+        peer.off("call", handleCall);
+      };
     }
-  }, []);
+  }, [role, peer, myMediaStream]);
 
-  const initializeMediaSource = () => {
-    mediaSourceRef.current = new MediaSource();
-
-    if (videoRef.current) {
-      videoRef.current.src = URL.createObjectURL(mediaSourceRef.current);
+  const handleEndCall = () => {
+    if (theirMediaStream) {
+      theirMediaStream.getTracks().forEach((track) => track.stop());
     }
-
-    mediaSourceRef.current.addEventListener("sourceopen", () => {
-      sourceBufferRef.current = mediaSourceRef.current!.addSourceBuffer(
-        'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
-      );
-      startWebSocketConnection();
-    });
-  };
-
-  const startWebSocketConnection = () => {
-    wsRef.current = new WebSocket("ws://localhost:3001");
-
-    wsRef.current.onopen = () => {
-      setIsConnected(true);
-    };
-
-    wsRef.current.onmessage = (event) => {
-      if (sourceBufferRef.current && !sourceBufferRef.current.updating) {
-        const data = new Uint8Array(event.data);
-        sourceBufferRef.current.appendBuffer(data);
-      }
-    };
-
-    wsRef.current.onclose = () => {
-      setIsConnected(false);
-    };
-  };
-
-  const stopStream = () => {
-    if (wsRef.current) {
-      wsRef.current.close();
+    if (myMediaStream) {
+      myMediaStream.getTracks().forEach((track) => track.stop());
     }
-    if (mediaSourceRef.current) {
-      mediaSourceRef.current.endOfStream();
-    }
+    setIsConnected(false);
+    setConnectionStatus("disconnected");
   };
 
   useEffect(() => {
     return () => {
-      stopStream();
+      if (peer) {
+        peer.destroy();
+      }
+      myMediaStream?.getTracks().forEach((track) => track.stop());
+      theirMediaStream?.getTracks().forEach((track) => track.stop());
     };
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Video Call</h1>
-
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden mb-4">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              controls
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={isConnected ? stopStream : initializeMediaSource}
-              className={`px-6 py-3 rounded-lg font-medium text-white ${
-                isConnected
-                  ? "bg-red-500 hover:bg-red-600"
-                  : "bg-blue-500 hover:bg-blue-600"
-              } transition-colors`}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Video Call</h1>
+          <div className="text-sm">
+            Status:{" "}
+            <span
+              className={`font-medium ${
+                connectionStatus === "connected"
+                  ? "text-green-600"
+                  : connectionStatus === "connecting"
+                  ? "text-yellow-600"
+                  : "text-red-600"
+              }`}
             >
-              {isConnected ? "Stop Stream" : "Start Stream"}
-            </button>
+              {connectionStatus.charAt(0).toUpperCase() +
+                connectionStatus.slice(1)}
+            </span>
           </div>
+        </div>
+
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-4">
+          {/* Local Video */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <p className="text-center mt-2">You</p>
+          </div>
+
+          {/* Remote Video */}
+          <div className="bg-white rounded-lg shadow-lg p-4">
+            <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+              <video
+                ref={remoteVideoRef}
+                autoPlay
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <p className="text-center mt-2">Remote User</p>
+          </div>
+        </div>
+
+        <div className="flex justify-center gap-4 mt-6">
+          <button
+            onClick={handleEndCall}
+            className="px-6 py-3 rounded-lg font-medium text-white bg-red-500 hover:bg-red-600 transition-colors"
+          >
+            End Call
+          </button>
         </div>
       </div>
     </div>

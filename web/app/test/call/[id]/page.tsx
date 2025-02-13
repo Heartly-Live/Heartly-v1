@@ -40,8 +40,6 @@ export default function CallPage() {
   };
 
   const handleDisconnected = async () => {
-    // Disconnect the Call here ...
-
     if (isConnected) {
       setShowFeedback(true);
     } else {

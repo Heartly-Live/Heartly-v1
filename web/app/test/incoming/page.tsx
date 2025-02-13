@@ -49,7 +49,7 @@ export default function IncomingCallPage() {
     const peerId = getPeerId();
     console.log("Peer id: ", peerId);
     socket?.emit("call-accepted", { caller, roomId, peerId });
-    const role = "reciever";
+    const role = "receiver";
     router.push(`/test/call/videoCall?peerId=${peerId}&role=${role}`);
     //showSuccessMsg("Call accepted");
     //router.push("/test/call/123"); // Replace 123 with actual call ID

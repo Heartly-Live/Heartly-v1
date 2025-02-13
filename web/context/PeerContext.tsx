@@ -26,11 +26,11 @@ export const PeerProvider = ({ children }: { children: ReactNode }) => {
 
     const id = uuidV4();
     const options = {
-      host: "https://heartly.live/api",
+      host: "heartly.live/api",
       path: "/peerjs/peer",
       secure: true,
     };
-    const newPeer = new Peer(id);
+    const newPeer = new Peer(id, options);
 
     newPeer.on("open", (id) => {
       console.log("Peer ID:", id);

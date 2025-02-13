@@ -11,9 +11,14 @@ interface ListenersListProps {
     language: string;
     rating: string;
   };
+  loading: boolean;
 }
 
-export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
+export const ListenersList = ({
+  listeners,
+  filters,
+  loading,
+}: ListenersListProps) => {
   const filteredListeners = listeners.filter((listener) => {
     if (filters.expertise && listener.expertise !== filters.expertise)
       return false;
@@ -24,13 +29,13 @@ export const ListenersList = ({ listeners, filters }: ListenersListProps) => {
     return true;
   });
 
-  if (filteredListeners.length === 0) {
+  if (loading) {
     return (
       <div className="flex flex-col justify-center items-center gap-4">
         <div className="flex flex-col justify-center items-center gap-4">
           <div className="flex flex-col justify-center items-center">
             <div className="text-3xl font-nunito font-bold">
-              No Listeners Found
+              {loading ? "Loading..." : "No Listeners Found"}
             </div>
           </div>
         </div>

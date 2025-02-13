@@ -109,7 +109,7 @@ const Page = () => {
               }
             }
           }
-        `,
+        `
       );
       setListeners(data.experts);
     } catch (error) {
@@ -141,7 +141,11 @@ const Page = () => {
     <Fragment>
       <div className="flex flex-col justify-start items-center gap-4">
         <Header onFilterChange={handleFilterChange} />
-        <ListenersList listeners={listeners} filters={filters} />
+        <ListenersList
+          listeners={listeners}
+          filters={filters}
+          loading={isLoading}
+        />
         <BottomNavbar />
       </div>
     </Fragment>

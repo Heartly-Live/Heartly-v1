@@ -44,7 +44,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
 
       socket.on("User-not-found", () => {
         console.log(
-          "Couldnt place the call as the user could not be found among those online",
+          "Couldnt place the call as the user could not be found among those online"
         );
       });
       socket.on("call-request", ({ caller, roomId }) => {
